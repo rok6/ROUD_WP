@@ -1,5 +1,5 @@
 <?php
-namespace Roud;
+namespace Roud\module\controller;
 
 class NewsController extends Controller
 {

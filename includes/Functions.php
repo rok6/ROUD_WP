@@ -2,8 +2,8 @@
 if( !defined('ROUD_INC_PATH') ) {
   define('ROUD_INC_PATH' , dirname(__FILE__));
 }
-require_once(ROUD_INC_PATH . '/module/Controller.php');
-require_once(ROUD_INC_PATH . '/module/Model.php');
+require_once(ROUD_INC_PATH . '/module/controller/Controller.php');
+require_once(ROUD_INC_PATH . '/module/model/Model.php');
 require_once(ROUD_INC_PATH . '/Helper.php');
 
 
@@ -22,31 +22,15 @@ if( !function_exists('h') ) {
 }
 
 if( !function_exists('request_module') ) {
-  function request_module( $filename, $module_type, $rename = 'nfm', $namespace = 'Roud\\' )
+  function request_module( $filename, $module_type, $namespace = 'Roud\\module\\' )
   {
-    if( !is_file( $module = ROUD_INC_PATH . '/module/'. $module_type .'s/' . $filename . '.php' ) )
+    $filename = pascalize($filename) . pascalize($module_type);
+    if( !is_file( $module = ROUD_INC_PATH . '/module/'. $module_type .'/' . $filename . '.php' ) )
       return false;
 
     require_once($module);
 
-    $request_class = '';
-
-    preg_match_all( '/[nfm]/', $rename, $m );
-
-    foreach( $m[0] as $v ) {
-      switch( $v ) {
-        case 'n':
-          $request_class .= $namespace;
-          break;
-        case 'f':
-          $request_class .= pascalize($filename);
-          break;
-        case 'm':
-          $request_class .= pascalize($module_type);
-          break;
-      }
-    }
-
+    $request_class = $namespace . $module_type . '\\' . $filename;
     return new $request_class();
   }
 }

@@ -14,7 +14,7 @@ if( !class_exists('Roud') ) {
       else
         self::$domain = 'Roud';
 
-      $this->custom_post = new RoudCustomPost( self::$domain );
+      $this->custom_post = new Roud_CustomPost( self::$domain );
 
       $this->default_init();
     }

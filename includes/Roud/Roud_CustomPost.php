@@ -1,6 +1,6 @@
 <?php
 
-class RoudCustomPost
+class Roud_CustomPost
 {
 	static private $domain;
 

@@ -9,8 +9,7 @@ class Helper
 
 	static public function title( $id, array $args = array() )
 	{
-		//$val->ID, array('url' => get_permalink($val->ID), 'alt' => $val->post_title)
-		_dump( get_the_title($id) );
+		return get_the_title($id);
 	}
 	static public function thumbnail( $id, array $args = array() )
 	{
@@ -20,9 +19,9 @@ class Helper
 	{
 		//$val->ID, array('url' => get_permalink($val->ID), 'alt' => $val->post_title)
 	}
-	static public function content( $id, array $args = array() )
+	static public function content( $content )
 	{
-		//$val->ID, array('url' => get_permalink($val->ID), 'alt' => $val->post_title)
+		return $content;
 	}
 
 

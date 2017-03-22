@@ -9,7 +9,7 @@
 				<div class="title"><?php echo Helper::title( $val->ID, array('url' => get_permalink($val->ID)) ); ?></div>
 			</header>
 			<div class="body">
-				<div class="content"><?php echo Helper::content( $val->ID ); ?></div>
+				<div class="content"><?php echo Helper::content( $val->post_content ); ?></div>
 			</div>
 			<footer class="f">
 				<p class="date"><?php echo Helper::publish_date( $val->ID ); ?></p>

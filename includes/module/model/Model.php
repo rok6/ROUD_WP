@@ -1,5 +1,5 @@
 <?php
-namespace Roud;
+namespace Roud\module\model;
 
 class Model
 {
@@ -16,7 +16,7 @@ class Model
       'posts_per_page' => get_option('posts_per_page'),
     );
   }
-  
+
   public function get( array $args = array() ) {
     return get_posts($args += $this->default);
   }

@@ -1,5 +1,5 @@
 <?php
-namespace Roud;
+namespace Roud\module\controller;
 
 abstract class Controller
 {
@@ -10,12 +10,12 @@ abstract class Controller
 
   public function __construct()
   {
-
+    //
   }
 
   protected function set( $name )
   {
-    $this->$name = request_module( $name, 'model', 'nf' );
+    $this->$name = request_module( $name, 'model' );
 
     $this->views['posts'] = $this->$name->get(array(
       'post_type' => $this->post_type,
@@ -24,6 +24,6 @@ abstract class Controller
 
   public function render() {
     extract($this->views);
-    require( dirname(__FILE__) . '/views/' . $this->post_type . '.php' );
+    require( ROUD_INC_PATH . '/module/view/' . $this->post_type . '.php' );
   }
 }
