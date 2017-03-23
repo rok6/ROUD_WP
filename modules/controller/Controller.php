@@ -31,7 +31,7 @@ abstract class Controller
       require( $file );
     }
     else {
-      wp_die( 'file does not exist - ' . $this->post_type );
+      exit( 'file does not exist - ' . $this->post_type );
     }
 
   }
