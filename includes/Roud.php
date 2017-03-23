@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__) . '/Roud/Roud_CustomPost.php');
+require_once(dirname(__FILE__) . '/Roud_CustomPost.php');
 
 if( !class_exists('Roud') ) {
 

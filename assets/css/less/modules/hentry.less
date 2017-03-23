@@ -1,0 +1,58 @@
+// main: ../../style.less
+/*=====================================================*
+ * microformat hentry
+ *=====================================================*/
+
+.hentry {
+  position: relative;
+}
+
+.entry-header {
+  .entry-title {
+    margin-bottom: 0.5em;
+  }
+  .post-thumbnail {
+
+  }
+}
+
+.entry-content {
+
+}
+
+.entry-footer {
+  display: flex;
+  & > * {
+    padding: 0 1em;
+  }
+  .entry-date {
+    .published {
+      &::before {
+        content: 'posted:';
+        margin-right: 0.5em;
+      }
+    }
+    .updated {
+      margin-left: 1em;
+      &::before {
+        content: 'updated:';
+        margin-right: 0.5em;
+      }
+    }
+  }
+  .post-author {
+    &::before {
+      content: 'author:';
+      margin-right: 0.5em;
+    }
+  }
+  .post-tags {
+    &::before {
+      content: 'tags:';
+      margin-right: 0.5em;
+    }
+    .tag {
+      margin-right: 0.5em;
+    }
+  }
+}

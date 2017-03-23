@@ -8,5 +8,6 @@ add_action('after_setup_theme', function () {
 
 add_action('after_setup_theme', function () {
   $Roud = new Roud();
-  $Roud->custom_post->init();
+  $Roud->custom_post->news();
+  $Roud->custom_post->illurweb();
 }, 9999);

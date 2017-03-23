@@ -1,15 +1,11 @@
 <?php get_header(); ?>
 
-<div id="wrapper">
+	<div id="primary">
 
-	<main>
+		<main id="main" role="main">
+			<h1>index</h1>
+		</main>
 
-		<?php component('post')->render(); ?>
-
-		<?php component('news')->render(); ?>
-
-	</main>
-
-</div>
+	</div>
 
 <?php get_footer();

@@ -2,18 +2,28 @@
 if( !defined('ROUD_INC_PATH') ) {
   define('ROUD_INC_PATH' , dirname(__FILE__));
 }
-require_once(ROUD_INC_PATH . '/module/controller/Controller.php');
-require_once(ROUD_INC_PATH . '/module/model/Model.php');
+if( !defined('ROUD_MDLS_PATH') ) {
+  define('ROUD_MDLS_PATH' , get_template_directory() . '/modules');
+}
+require_once(ROUD_MDLS_PATH . '/controller/Controller.php');
+require_once(ROUD_MDLS_PATH . '/model/Model.php');
 require_once(ROUD_INC_PATH . '/Helper.php');
 
 
+ /**
+  * MVC START
+  *=====================================================*/
 if( !function_exists('component') ) {
-  function component( $name )
+  function component( $name = '' )
   {
     return request_module( $name, 'controller' );
   }
 }
 
+
+ /**
+  * Utls
+  *=====================================================*/
 if( !function_exists('h') ) {
   function h( $str )
   {
@@ -22,10 +32,14 @@ if( !function_exists('h') ) {
 }
 
 if( !function_exists('request_module') ) {
-  function request_module( $filename, $module_type, $namespace = 'Roud\\module\\' )
+  function request_module( $filename = '', $module_type, $namespace = 'Roud\\module\\' )
   {
+    if( $filename === '' ) {
+      $filename = get_post_type();
+    }
+
     $filename = pascalize($filename) . pascalize($module_type);
-    if( !is_file( $module = ROUD_INC_PATH . '/module/'. $module_type .'/' . $filename . '.php' ) )
+    if( !is_file( $module = ROUD_MDLS_PATH . '/'. $module_type .'/' . $filename . '.php' ) )
       return false;
 
     require_once($module);

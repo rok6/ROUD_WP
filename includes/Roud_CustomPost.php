@@ -9,24 +9,19 @@ class Roud_CustomPost
 		self::$domain = $domain;
 	}
 
-	public function init()
-	{
-		$this->news();
-		$this->illurweb();
-	}
-
-	private function news()
+	public function news()
   {
     $cpt_args = array(
       'label'         => 'NEWS',
       'public'        => true,
+      'has_archive'   => true,
       'show_in_rest'  => true,
       'menu_position' => 5,
     );
     register_post_type('news', $cpt_args);
   }
 
-	private function illurweb()
+	public function illurweb()
 	{
 		$cpt_args = array(
       'label'         => __('ILLURWEB', self::$domain),

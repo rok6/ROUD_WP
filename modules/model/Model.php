@@ -18,6 +18,11 @@ class Model
   }
 
   public function get( array $args = array() ) {
-    return get_posts($args += $this->default);
+    if( is_single() ) {
+      return [get_post( get_the_ID() )];
+    }
+    else {
+      return get_posts($args += $this->default);
+    }
   }
 }
