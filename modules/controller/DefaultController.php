@@ -1,12 +1,12 @@
 <?php
 namespace Roud\module\controller;
 
-class PostController extends Controller
+class DefaultController extends Controller
 {
 
   public function __construct( $render_type )
   {
-    $this->set( 'post' );
+    $this->set( get_post_type() );
     $this->render( $render_type );
   }
 

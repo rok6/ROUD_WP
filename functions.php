@@ -10,4 +10,5 @@ add_action('after_setup_theme', function () {
   $Roud = new Roud();
   $Roud->custom_post->news();
   $Roud->custom_post->illurweb();
+  $Roud->cmb2->init();
 }, 9999);

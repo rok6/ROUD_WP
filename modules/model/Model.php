@@ -18,7 +18,9 @@ class Model
   }
 
   public function get( array $args = array() ) {
-    _dump($this->default);
+    if( is_single() ) {
+      return get_post();
+    }
     return get_posts($args += $this->default);
   }
 }

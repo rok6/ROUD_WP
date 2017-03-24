@@ -1,13 +1,9 @@
 <?php get_header(); ?>
 
-  <div id="primary">
+  <main id="main" role="main">
 
-    <main id="main" role="main">
+    <?php component('post', 'list'); ?>
 
-      <?php component()->render('list'); ?>
-
-    </main>
-
-  </div><!--#primary-->
+  </main><!--#main-->
 
 <?php get_footer();

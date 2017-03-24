@@ -4,10 +4,10 @@ namespace Roud\module\controller;
 class NewsController extends Controller
 {
 
-  public function __construct()
+  public function __construct( $render_type )
   {
-    $this->post_type = 'news';
-    $this->set( $this->post_type );
+    $this->set( 'news' );
+    $this->render( $render_type );
   }
 
 }

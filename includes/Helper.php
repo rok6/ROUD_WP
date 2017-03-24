@@ -8,15 +8,65 @@ class Helper
 	}
 
 	/**
+	 * logo
+	 *=====================================================*/
+	static public function logo( $link = false )
+	{
+		$title = $link ?
+			sprintf('<a href="%1$s">%2$s</a>',
+				esc_url( get_home_url() ),
+				esc_html( get_bloginfo('name') )
+			)
+		: get_bloginfo('name');
+
+		return sprintf('<h1>%1$s</h1>', (string)$title);
+	}
+
+	/**
+	 * robots
+	 *=====================================================*/
+	static public function robots()
+	{
+		$robots = is_archive() ? false : get_post_custom()['meta_robots'][0];
+
+		if( !!get_option('blog_public') === !!$robots ) {
+			return;
+		}
+
+		return sprintf('<meta name="robots" content="%1$s" />' . PHP_EOL,
+			esc_html( $robots ? 'index, follow' : 'noindex, follow'  )
+		);
+	}
+
+	/**
+	 * description
+	 *=====================================================*/
+	static public function description()
+	{
+		$description = get_post_custom()['meta_desc'][0];
+
+		if( !$description ) {
+			$description = get_bloginfo('description');
+		}
+
+		return sprintf('<meta name="description" content="%1$s" />' . PHP_EOL,
+			esc_html( $description )
+		);
+	}
+
+	/**
 	 * title
 	 *=====================================================*/
-	static public function title( $id, $level = 2 )
+	static public function title( $id, $level = 2, $link = false )
 	{
-		return sprintf('<h%1$d><a href="%3$s">%2$s</a></h%1$d>',
-			(int)$level,
-			esc_html( get_the_title($id) ),
-			esc_url( get_permalink($id) )
-		);
+		$title = $link ?
+			sprintf('<a href="%1$s">%2$s</a>',
+				esc_url( get_permalink($id) ),
+				esc_html( get_the_title($id) )
+			)
+		: esc_html( get_the_title($id) );
+
+		return sprintf('<h%1$d>%2$s</h%1$d>', (int)$level, (string)$title);
 	}
 
 	/**
@@ -50,6 +100,11 @@ class Helper
 		$published_datetime = get_the_date(DATE_W3C, $id);
 		$updated						= get_post_modified_time($format, false, $id);
 		$updated_datetime		= get_post_modified_time(DATE_W3C, false, $id);
+
+		$entry_date .= sprintf(
+			'<span class="elapsed-time">%1$s前</span>' . PHP_EOL,
+			human_time_diff( get_post_modified_time('U', false, $id) )
+		);
 
 		$entry_date .= sprintf(
 			'<time datetime="%1$s" class="published">%2$s</time>' . PHP_EOL,
@@ -97,26 +152,6 @@ class Helper
 		}
 
 		return $elm . PHP_EOL;
-	}
-
-	/**
-	 * builder
-	 *=====================================================*/
-	private function builder( $elm, array $attrs = array() )
-	{
-		$params = '';
-
-		foreach( $attrs as $key => $val ) {
-			if( is_bool($val) ) {
-				if( $val ) $params .= " $key";
-			}
-			else {
-				$params .= " $key=\"$val\"";
-			}
-		}
-
-		//
-
 	}
 
 }

@@ -1,5 +1,6 @@
 <?php
 require_once(dirname(__FILE__) . '/Roud_CustomPost.php');
+require_once(dirname(__FILE__) . '/Roud_CMB2.php');
 
 if( !class_exists('Roud') ) {
 
@@ -15,6 +16,7 @@ if( !class_exists('Roud') ) {
         self::$domain = 'Roud';
 
       $this->custom_post = new Roud_CustomPost( self::$domain );
+      $this->cmb2 = new Roud_CMB2( self::$domain );
 
       $this->default_init();
     }

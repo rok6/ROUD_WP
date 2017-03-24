@@ -1,12 +1,12 @@
 
   <div class="recent-post">
       <h2 class="headding">What's New</h2>
-      <ul class="container"><?php foreach( $posts as $key => $data ) : ?>
+      <ul class="container"><?php foreach( $post as $key => $data ) : ?>
 
           <li class="row post-list"><!--<?=esc_html($data->ID)?>-->
             <div class="hentry">
               <header class="entry-header">
-                <div class="entry-title"><?=Helper::title($data->ID, 3)?></div>
+                <div class="entry-title"><?=Helper::title($data->ID, 3, true)?></div>
                 <div class="post-thumbnail"><?=Helper::thumbnail($data->ID, array(
                   'url' => get_permalink($data->ID),
                   'alt' => $data->post_title,

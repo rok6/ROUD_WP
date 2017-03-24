@@ -78,9 +78,6 @@ if( $enable_default_options ) {
  *  サポートの有効化
  *=====================================================*/
 
-//wp_head() でのタイトルタグ出力の有効化
-add_theme_support('title-tag');
-
 //編集ショートカットの有効化
 add_theme_support('customize-selective-refresh-widgets');
 
@@ -95,3 +92,17 @@ add_theme_support('html5', array(
     'gallery',
     'caption'
 ));
+
+//wp_head() でのタイトルタグ出力の有効化
+add_theme_support('title-tag');
+//タイトルからのキャッチフレーズの除去
+add_filter( 'document_title_parts', function( $title ) {
+  if( isset($title['tagline']) ) {
+    unset( $title['tagline'] );
+	}
+	return $title;
+});
+//タイトルのセパレータ
+add_filter( 'document_title_separator', function( $separator ) {
+  return $separator = '|';
+});
