@@ -8,13 +8,15 @@
       <div class="entry-date">
         <?=Helper::datetime($post->ID)?>
       </div>
-      <div class="post-author"><?=Helper::author($post->post_author)?></div>
+      <div class="post-author">
+        <?=Helper::author($post->post_author)?>
+      </div>
       <div class="post-tags">
         <?=Helper::tags($post->ID)?>
       </div>
     </footer>
     <div class="entry-content">
 			<?=Helper::content($post)?>
-		</div>
+    </div>
   </div>
 </article>

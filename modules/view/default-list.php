@@ -16,7 +16,9 @@
                 <div class="entry-date">
                   <?=Helper::datetime($data->ID)?>
                 </div>
-                <div class="post-author"><?=Helper::author($data->post_author)?></div>
+                <div class="post-author">
+                  <?=Helper::author($data->post_author)?>
+                </div>
                 <div class="post-tags">
                   <?=Helper::tags($data->ID)?>
                 </div>

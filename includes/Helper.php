@@ -2,10 +2,22 @@
 
 class Helper
 {
-	public function __construct()
-	{
+	/*=====================================================
 
-	}
+		@ Helpers
+
+			logo
+			robots
+			description
+			title
+			thumbnail
+			author
+			datetime
+			content
+			tags
+
+	*=====================================================*/
+
 
 	/**
 	 * logo
@@ -19,7 +31,10 @@ class Helper
 			)
 		: get_bloginfo('name');
 
-		return sprintf('<h1>%1$s</h1>', (string)$title);
+		return sprintf(
+			'<h1>%1$s</h1>' . PHP_EOL,
+			(string)$title
+		);
 	}
 
 	/**
@@ -33,7 +48,8 @@ class Helper
 			return;
 		}
 
-		return sprintf('<meta name="robots" content="%1$s" />' . PHP_EOL,
+		return sprintf(
+			'<meta name="robots" content="%1$s" />' . PHP_EOL,
 			esc_html( $robots ? 'index, follow' : 'noindex, follow'  )
 		);
 	}
@@ -49,7 +65,8 @@ class Helper
 			$description = get_bloginfo('description');
 		}
 
-		return sprintf('<meta name="description" content="%1$s" />' . PHP_EOL,
+		return sprintf(
+			'<meta name="description" content="%1$s" />' . PHP_EOL,
 			esc_html( $description )
 		);
 	}
@@ -66,16 +83,10 @@ class Helper
 			)
 		: esc_html( get_the_title($id) );
 
-		return sprintf('<h%1$d>%2$s</h%1$d>', (int)$level, (string)$title);
-	}
-
-	/**
-	 * author
-	 *=====================================================*/
-	static public function author( $userid, $field = 'nickname' )
-	{
-		return sprintf('<span>%1$s</span>',
-			esc_html( get_the_author_meta($field, $userid) )
+		return sprintf(
+			'<h%1$d>%2$s</h%1$d>',
+			(int)$level,
+			(string)$title
 		);
 	}
 
@@ -87,6 +98,16 @@ class Helper
 		$args['alt'] = trim( strip_tags( $args['alt'] ) );
 		$args['title'] = trim( strip_tags( $args['title'] ) );
 		return get_the_post_thumbnail($id, 'medium', $args);
+	}
+
+	/**
+	 * author
+	 *=====================================================*/
+	static public function author( $userid, $field = 'nickname' )
+	{
+		return sprintf('<span>%1$s</span>' . PHP_EOL,
+			esc_html( get_the_author_meta($field, $userid) )
+		);
 	}
 
 	/**
@@ -102,24 +123,24 @@ class Helper
 		$updated_datetime		= get_post_modified_time(DATE_W3C, false, $id);
 
 		$entry_date .= sprintf(
-			'<span class="elapsed-time">%1$s前</span>' . PHP_EOL,
+			'<span class="elapsed-time">%1$s前</span>',
 			human_time_diff( get_post_modified_time('U', false, $id) )
 		);
 
 		$entry_date .= sprintf(
-			'<time datetime="%1$s" class="published">%2$s</time>' . PHP_EOL,
+			'<time datetime="%1$s" class="published">%2$s</time>',
 			esc_attr($published_datetime),
 			esc_html($published)
 		);
 
 		if( $published !== $updated ) {
 			$entry_date .= sprintf(
-				'<time datetime="%1$s" class="updated">%2$s</time>' . PHP_EOL,
+				'<time datetime="%1$s" class="updated">%2$s</time>',
 				esc_attr($updated_datetime),
 				esc_html($updated)
 			);
 		}
-		return $entry_date;
+		return $entry_date . PHP_EOL;
 	}
 
 	/**
@@ -128,7 +149,7 @@ class Helper
 	static public function content()
 	{
 		the_post();
-		return str_replace( ']]>', ']]&gt;', apply_filters('the_content', get_the_content()) );
+		return PHP_EOL . str_replace( ']]>', ']]&gt;', apply_filters('the_content', get_the_content()) ) . PHP_EOL;
 	}
 
 	/**
