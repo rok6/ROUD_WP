@@ -135,15 +135,20 @@ dd {
 /**
  * Code
  *=====================================================*/
- pre {
-   overflow-x: auto;
-   padding: 1em;
-   margin: 1em 0;
-   color: #ccc;
-   background-color: #222;
-   font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
- }
- code {
-   color: #ccc;
-   background-color: #333;
- }
+pre, code {
+  border-radius: 3px;
+}
+pre {
+  overflow-x: scroll;
+  padding: 1.5em;
+  margin: 1em 0;
+  color: #ccc;
+  background-color: #222;
+  font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
+}
+code {
+  display: inline-block;
+  padding: 0 0.5em;
+  color: #ccc;
+  background-color: #333;
+}

@@ -1,41 +1,8 @@
-// main: ../../style.less
-@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');
-@import url('https://fonts.googleapis.com/css?family=Source+Serif+Pro');
-@font-face {
-  font-family: "Yu Gothic";
-  src: local("Yu Gothic Medium");
-  font-weight: 100;
-}
-@font-face {
-  font-family: "Yu Gothic";
-  src: local("Yu Gothic Medium");
-  font-weight: 200;
-}
-@font-face {
-  font-family: "Yu Gothic";
-  src: local("Yu Gothic Medium");
-  font-weight: 300;
-}
-@font-face {
-  font-family: "Yu Gothic";
-  src: local("Yu Gothic Medium");
-  font-weight: 400;
-}
-@font-face {
-  font-family: "Yu Gothic";
-  src: local("Yu Gothic Bold");
-  font-weight: bold;
-}
-@font-face {
-  font-family: "Helvetica Neue";
-  src: local("Helvetica Neue Regular");
-  font-weight: 100;
-}
-@font-face {
-  font-family: "Helvetica Neue";
-  src: local("Helvetica Neue Regular");
-  font-weight: 200;
-}
+// main: ../style.less
+@import url('//fonts.googleapis.com/css?family=Roboto:300,400,500,700');
+//@import url('modules/font-NotoSans.less');
+@import url('modules/font-YuGothic.less');
+
 /*=====================================================*
  * initialize
  *=====================================================*/
@@ -64,14 +31,11 @@ html{
   font-weight: normal;
 }
 body {
-  background: #ddd;
+  background: #222;
 	font-size: 1.6em;
 	line-height: 1.5;
   font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Yu Gothic', YuGothic, Verdana, Meiryo, sans-serif;
-}
-.serif {
-  font-family: 'Source Serif Pro', 'Yu Mincho', YuMincho, 'Hiragino Mincho ProN', 'Hiragino Mincho Pro', 'HGP明朝B', serif;
-  font-feature-settings : 'pkna';
+  // font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Noto Sans Japanese', Verdana, Meiryo, sans-serif;
 }
 
 #wrapper {
@@ -85,7 +49,7 @@ header#header {
   min-width: 250px;
   min-height: 100vh;
   h1 a{
-    color: #333;
+    color: #555;
   }
 }
 
@@ -100,7 +64,20 @@ main#main {
 
 
 article.single {
-  padding: 4.5rem;
+  .hentry {
+    position: relative;
+    background: #eee;
+    padding-top: 4.5rem;
+  }
+  .entry-header,
+  .entry-footer {
+    padding: 0 4.5rem;
+  }
+  .entry-content {
+    margin-top: 1.5em;
+    padding: 3em 4.5rem;
+    background: #fff;
+  }
 }
 
 
@@ -112,7 +89,7 @@ article.single {
  * List
  *=====================================================*/
 .post-list {
-  padding: 1em;
+  padding: 1em 1.5em;
   border-bottom: 1px solid #ddd;
 }
 
@@ -120,16 +97,16 @@ article.single {
 /*=====================================================*
  * Element
  *=====================================================*/
- .title {
-   position: fixed;
-   width: inherit; height: 250px;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   .logo {
-     font-size: 2.75em;
-   }
- }
+.title {
+  position: fixed;
+  width: inherit; height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .logo {
+    font-size: 2.75em;
+  }
+}
 
 .headding {
   padding: 1em;
