@@ -2,15 +2,6 @@
 /**
  * 一般設定
  */
-
-
-add_action('admin_init', function() {
-	register_setting('site_settings', 'blogname');
-	register_setting('site_settings', 'blogdescription');
-	register_setting('site_settings', 'twitter');
-	register_setting('site_settings', 'facebook');
-});
-
 ?>
 <div class="wrap">
 <h1><?php echo esc_html( __('General Settings') ); ?></h1>
