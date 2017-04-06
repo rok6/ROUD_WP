@@ -14,7 +14,7 @@ add_editor_style( '/assets/css/editor-style.css' );
 //投稿サムネイルの有効化
 add_theme_support('post-thumbnails', array( 'post' ));
 //画像のサイズ規格を追加
-add_image_size('featured-image', 1920, 1080, true);
+add_image_size('featured-image', 2000, 1500, true);
 
 
 
@@ -46,9 +46,9 @@ if( $enable_default_options ) {
    *  サイトの基本設定
    */
   //サイト名
-  set_option('blogname', 'Roud');
+  // set_option('blogname', 'Roud');
   //サイトの説明
-  set_option('blogdescription', '');
+  // set_option('blogdescription', '');
   //サイトを公開するか　true=1, false=0
   set_option('blog_public', 0);
   //サイトの文字セット
@@ -64,6 +64,9 @@ if( $enable_default_options ) {
   set_option('posts_per_rss', 10);
   //コメントの返信の最大深度 default: 5
   set_option('thread_comments_depth', 3);
+
+	//ピンバック・トラックバックを受け取るか
+  set_option('default_ping_status', 0);
 
   /**
    *  その他

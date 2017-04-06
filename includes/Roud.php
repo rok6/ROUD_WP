@@ -1,5 +1,6 @@
 <?php
 require_once(dirname(__FILE__) . '/Roud_CustomPost.php');
+require_once(dirname(__FILE__) . '/Roud_Options.php');
 require_once(dirname(__FILE__) . '/Roud_CMB2.php');
 
 if( !class_exists('Roud') ) {
@@ -18,21 +19,30 @@ if( !class_exists('Roud') ) {
       $this->custom_post = new Roud_CustomPost( self::$domain );
       $this->cmb2 = new Roud_CMB2( self::$domain );
 
+			new Roud_Options( self::$domain );
+
       $this->default_init();
     }
 
 
     private function default_init()
     {
-      //Actions and Filters - Must be "public"
-      //add_action('init', array( $this, 'unregister_tag_taxonomies' ));
-      add_action('init', array( $this, 'unregister_category_taxonomies' ));
-      add_action('admin_menu', array( $this, 'reset_filter_primary_nav_menu' ));
-      add_filter('custom_menu_order', '__return_true');
-      add_filter('menu_order', array( $this, 'reset_filter_menu_order' ));
+			//add_action('init', array( $this, 'unregister_tag_taxonomies' ));
+			add_action('init', array( $this, 'unregister_category_taxonomies' ));
+
+			if( is_admin() ) {
+	      add_action('admin_menu', array( $this, 'reset_filter_primary_nav_menu' ));
+	      add_filter('custom_menu_order', '__return_true');
+	      add_filter('menu_order', array( $this, 'reset_filter_menu_order' ));
+			}
+			else {
+				add_action('wp_enqueue_scripts', array($this, 'preload_jquery'));
+			}
 
       //言語ファイルのフォルダ名を指定
       $this->set_load_theme_textdomain('languages');
+
+			//wp_head での除去する項目を指定
       $this->clean_wp_head(array(
         'wp_generator',
         'wp_shortlink_wp_head',
@@ -40,56 +50,61 @@ if( !class_exists('Roud') ) {
         'feed_links_extra',
         'rsd_link', //EditURI　外部ツールから記事を投稿しないのなら不要
         'wlwmanifest_link', //wlwmanifest　Windows Live Writer　を使わないなら不要
-        //page-links
+        /*	page-links	*/
         'index_rel_link',
         'parent_post_rel_link',
         'start_post_rel_link',
         'adjacent_posts_rel_link_wp_head',
-        //oEmbed
+        /*	oEmbed	*/
         //'rest_output_link_wp_head',
         'wp_oembed_add_discovery_links',
         'wp_oembed_add_host_js',
-        //emoji
+        /*	emoji	*/
         'print_emoji_detection_script',
         'print_emoji_styles',
-        //inline-style
+        /*	inline-style	*/
         'recent_comments_style',
       ));
-      $this->preload_jquery();
     }
 
-
+		//言語フォルダを指定する
     private function set_load_theme_textdomain( $folder = 'languages' )
     {
       load_theme_textdomain(get_template_directory() . '/' . $folder);
     }
 
-
-    private function preload_jquery()
+		//jQuery をロード
+    public function preload_jquery()
     {
-      if( !is_admin() ) {
-        wp_deregister_script('jquery');
-        wp_enqueue_script('jquery', '//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js', array(), null, true);
-      }
+      wp_deregister_script('jquery');
+      wp_enqueue_script('jquery', '//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js', array(), null, true);
     }
 
-
+		//外観サブメニュー内のメニュー項目を外部に出す
     public function reset_filter_primary_nav_menu()
     {
+			//メニューの有効化
       add_theme_support( 'menus' );
+			//メニューをサブメニューから除去
       remove_submenu_page( 'themes.php','nav-menus.php' );
+			//メインメニュー内に"メニュー"として追加
       add_menu_page(
-        __( 'メニュー', self::$domain ),
-        __( 'メニュー', self::$domain ),
-        'edit_theme_options', 'nav-menus.php', '', null, 5
+				__( 'メニュー', self::$domain ),
+				__( 'メニュー', self::$domain ),
+        'edit_theme_options',
+				'nav-menus.php',
+				'',
+				null,
+				5
       );
     }
 
-
+		//投稿関係のメニューを上部に上げる
     public function reset_filter_menu_order( $menu_order )
     {
       $menu = array();
 
+			//最初の"投稿"までのメニューを取得
       foreach( $menu_order as $key => $val ) {
         if( 0 === strpos( $val, 'edit.php' ) )
           break;
@@ -98,7 +113,9 @@ if( !class_exists('Roud') ) {
         unset( $menu_order[$key] );
       }
 
+			//投稿に関するメニューを取得
       foreach( $menu_order as $key => $val ) {
+				//投稿に関するメニューを取得
         if( 0 === strpos( $val, 'edit.php' ) ) {
           $menu[] = $val;
           unset( $menu_order[$key] );
@@ -108,7 +125,7 @@ if( !class_exists('Roud') ) {
       return array_merge( $menu, $menu_order );
     }
 
-
+		//wp_head で出力される meta データの除去
     private function clean_wp_head( array $keys = array() )
     {
       foreach( $keys as $key ) {
@@ -161,6 +178,7 @@ if( !class_exists('Roud') ) {
       }
     }
 
+		//投稿のタグを削除
     public function unregister_tag_taxonomies()
     {
       global $wp_taxonomies;
@@ -175,6 +193,7 @@ if( !class_exists('Roud') ) {
       return true;
     }
 
+		//投稿のカテゴリーを削除
     public function unregister_category_taxonomies()
     {
       global $wp_taxonomies;

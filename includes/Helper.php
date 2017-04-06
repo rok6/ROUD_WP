@@ -59,15 +59,16 @@ class Helper
 	 *=====================================================*/
 	static public function description()
 	{
-		$description = get_post_custom()['meta_desc'][0];
+		$desc = get_post_custom();
+		$desc = ( isset($desc['meta_desc'][0]) ) ? $desc['meta_desc'][0] : get_bloginfo('description');
 
-		if( !$description ) {
-			$description = get_bloginfo('description');
+		if( $desc === '' ) {
+			return;
 		}
 
 		return sprintf(
 			'<meta name="description" content="%1$s" />' . PHP_EOL,
-			esc_html( $description )
+			esc_html( $desc )
 		);
 	}
 
@@ -93,8 +94,12 @@ class Helper
 	/**
 	 * thumbnail
 	 *=====================================================*/
-	static public function thumbnail( $id, array $args = array('alt' => '', 'title' => '') )
+	static public function thumbnail( $id, array $args = [] )
 	{
+		$args = $args += [
+			'alt' => '',
+			'title' => '',
+		];
 		$args['alt'] = trim( strip_tags( $args['alt'] ) );
 		$args['title'] = trim( strip_tags( $args['title'] ) );
 		return get_the_post_thumbnail($id, 'medium', $args);
@@ -124,7 +129,7 @@ class Helper
 
 		$entry_date .= sprintf(
 			'<span class="elapsed-time">%1$s前</span>',
-			human_time_diff( get_post_modified_time('U', false, $id) )
+			human_time_diff( get_post_modified_time('U', false, $id), date_i18n('U') )
 		);
 
 		$entry_date .= sprintf(

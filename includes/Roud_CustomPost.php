@@ -9,7 +9,16 @@ class Roud_CustomPost
 		self::$domain = $domain;
 	}
 
-	public function news()
+	public function add( array $custom_posts = [] )
+	{
+		foreach( $custom_posts as $f ) {
+			if( method_exists($this, $f) ) {
+				$this->$f();
+			}
+		}
+	}
+
+	private function news()
   {
     $cpt_args = array(
       'label'         => 'NEWS',
@@ -21,7 +30,7 @@ class Roud_CustomPost
     register_post_type('news', $cpt_args);
   }
 
-	public function illurweb()
+	private function illurweb()
 	{
 		$cpt_args = array(
       'label'         => __('ILLURWEB', self::$domain),

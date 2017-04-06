@@ -1,10 +1,4 @@
 <?php
-if( !defined('ROUD_INC_PATH') ) {
-  define('ROUD_INC_PATH' , dirname(__FILE__));
-}
-if( !defined('ROUD_MDLS_PATH') ) {
-  define('ROUD_MDLS_PATH' , get_template_directory() . '/modules');
-}
 require_once(ROUD_MDLS_PATH . '/controller/Controller.php');
 require_once(ROUD_MDLS_PATH . '/model/Model.php');
 require_once(ROUD_INC_PATH . '/Helper.php');
