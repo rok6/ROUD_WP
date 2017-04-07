@@ -15,7 +15,15 @@
 <div id="wrapper">
 
 <header id="header" class="h">
-  <div class="title">
-    <?=Helper::logo(true)?>
-  </div>
+	<div class="title">
+		<?=Helper::logo(true)?>
+	</div>
+	<nav class="nav-container">
+		<?php wp_nav_menu( array(
+			'menu'					=> 'main_menu',
+			'container'			=> '',
+			'indent'				=> 1,
+			'walker'				=> new Roud_Walker,
+		)); ?>
+	</nav>
 </header>

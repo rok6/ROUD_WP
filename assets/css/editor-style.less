@@ -1,7 +1,23 @@
 // out: editor-style.css, sourcemap: true, compress: true
 
 @import url('less/ress.less');
-@import url('less/modules/structure.less');
+@import url('less/structure.less');
 @import url('less/modules/editor.less');
 @import url('less/modules/form.less');
 @import url('less/modules/hentry.less');
+
+body.wp-editor {
+	background: #fff;
+	margin: 4.5rem 0 0;
+	padding: 0 4.5rem 0 4.5rem !important;
+	&::after {
+    display: block;
+		margin: 4.5rem -4.5rem 0 -4.5rem;
+    border-top: 1px dashed #aaa;
+    background: #ddd;
+    color: #777;
+    content: 'END';
+    line-height: 2em;
+    text-align: center;
+	}
+}

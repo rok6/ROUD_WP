@@ -1,4 +1,5 @@
 <?php
+require_once(dirname(__FILE__) . '/Roud_Navigation.php');
 require_once(dirname(__FILE__) . '/Roud_CustomPost.php');
 require_once(dirname(__FILE__) . '/Roud_Options.php');
 require_once(dirname(__FILE__) . '/Roud_CMB2.php');
@@ -16,10 +17,10 @@ if( !class_exists('Roud') ) {
       else
         self::$domain = 'Roud';
 
-      $this->custom_post = new Roud_CustomPost( self::$domain );
-      $this->cmb2 = new Roud_CMB2( self::$domain );
-
-			new Roud_Options( self::$domain );
+      $this->navigation		= new Roud_Navigation( self::$domain );
+      $this->custom_post	= new Roud_CustomPost( self::$domain );
+      $this->options			= new Roud_Options( self::$domain );
+      $this->cmb2					= new Roud_CMB2( self::$domain );
 
       $this->default_init();
     }
@@ -31,9 +32,10 @@ if( !class_exists('Roud') ) {
 			add_action('init', array( $this, 'unregister_category_taxonomies' ));
 
 			if( is_admin() ) {
-	      add_action('admin_menu', array( $this, 'reset_filter_primary_nav_menu' ));
+				add_action('wp_before_admin_bar_render', array( $this, 'hide_wp_admin_logo' ));
 	      add_filter('custom_menu_order', '__return_true');
 	      add_filter('menu_order', array( $this, 'reset_filter_menu_order' ));
+				add_filter('wp_unique_post_slug', array( $this, 'auto_post_slug' ), 10, 4);
 			}
 			else {
 				add_action('wp_enqueue_scripts', array($this, 'preload_jquery'));
@@ -73,30 +75,25 @@ if( !class_exists('Roud') ) {
       load_theme_textdomain(get_template_directory() . '/' . $folder);
     }
 
+		function auto_post_slug( $slug, $post_ID, $post_status, $post_type ) {
+			if( preg_match( '/(%[0-9a-f]{2})+/', $slug ) ) {
+				//$slug = utf8_uri_encode( $post_type ) . '-' . $post_ID;
+				$slug = 'entry-' . $post_ID;
+    	}
+    	return $slug;
+		}
+
+		//管理画面左上のWPロゴ除去
+		public function hide_wp_admin_logo() {
+			global $wp_admin_bar;
+			$wp_admin_bar->remove_menu( 'wp-logo' );
+		}
+
 		//jQuery をロード
     public function preload_jquery()
     {
       wp_deregister_script('jquery');
       wp_enqueue_script('jquery', '//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js', array(), null, true);
-    }
-
-		//外観サブメニュー内のメニュー項目を外部に出す
-    public function reset_filter_primary_nav_menu()
-    {
-			//メニューの有効化
-      add_theme_support( 'menus' );
-			//メニューをサブメニューから除去
-      remove_submenu_page( 'themes.php','nav-menus.php' );
-			//メインメニュー内に"メニュー"として追加
-      add_menu_page(
-				__( 'メニュー', self::$domain ),
-				__( 'メニュー', self::$domain ),
-        'edit_theme_options',
-				'nav-menus.php',
-				'',
-				null,
-				5
-      );
     }
 
 		//投稿関係のメニューを上部に上げる
