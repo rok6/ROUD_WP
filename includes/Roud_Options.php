@@ -17,8 +17,13 @@ class Roud_Options
 	{
 		register_setting('site_settings', 'blogname');
 		register_setting('site_settings', 'blogdescription');
+		register_setting('site_settings', 'admin_email');
 		register_setting('site_settings', 'twitter');
 		register_setting('site_settings', 'facebook');
+		register_setting('site_settings', 'posts_per_page');
+		register_setting('site_settings', 'posts_per_rss');
+		register_setting('site_settings', 'rss_use_excerpt');
+		register_setting('site_settings', 'blog_public');
 	}
 
 	public function set_menu_options()

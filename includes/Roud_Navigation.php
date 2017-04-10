@@ -66,17 +66,22 @@ class Roud_Walker extends Walker_Nav_Menu
 {
 	function start_lvl( &$output, $depth = 0, $args = array() )
 	{
-    $output .= "</li>" . PHP_EOL . $this->indent($args->indent, $depth) . "<ul>";
+    $output .= "</li>" . PHP_EOL;
+    $output .= $this->indent($args->indent, $depth) . "<li>" . PHP_EOL;
+    $output .= $this->indent($args->indent, $depth + 1) . "<ul class=\"nav-children\">";
   }
 
 	function end_lvl( &$output, $depth = 0, $args = array() )
 	{
-    $output .= PHP_EOL . $this->indent($args->indent, $depth) . "</ul>" . PHP_EOL;
+    $output .= PHP_EOL . $this->indent($args->indent, $depth + 1) . "</ul>" . PHP_EOL;
   }
 
 	function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 )
 	{
-    $output .= PHP_EOL . $this->indent($args->indent, $depth) . "<li>";
+		if( $item->menu_item_parent ) {
+			$depth++;
+		}
+		$output .= PHP_EOL . $this->indent($args->indent, $depth) . "<li>";
     $output .= $this->builder($item, $depth, $args);
   }
 
