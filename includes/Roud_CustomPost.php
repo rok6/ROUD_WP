@@ -28,6 +28,12 @@ class Roud_CustomPost
       'menu_position' => 5,
     );
     register_post_type('news', $cpt_args);
+    $tax_args = array(
+      'label'         => __('カテゴリー', self::$domain),
+      'hierarchical'  => true,
+      'show_in_rest'	=> true,
+    );
+    register_taxonomy('news_cat', 'news', $tax_args);
   }
 
 	private function illurweb()
@@ -44,12 +50,6 @@ class Roud_CustomPost
 			),
     );
     register_post_type('illurweb', $cpt_args);
-    $tax_args = array(
-      'label'         => __('チャプター', self::$domain),
-      'hierarchical'	=> true,
-      'show_in_rest'	=> false,
-    );
-    register_taxonomy('illurweb_chapter', 'illurweb', $tax_args);
 	}
 
 }
