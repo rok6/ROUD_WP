@@ -42,7 +42,18 @@ class Helper
 	 *=====================================================*/
 	static public function robots()
 	{
-		$robots = is_archive() ? false : get_post_custom()['meta_robots'][0];
+		$robots = false;
+
+		if( is_archive() ) {
+			$robots = false;
+		}
+
+		if( isset(get_post_custom()['meta_robots'][0]) ) {
+			$robots = get_post_custom()['meta_robots'][0];
+		}
+		else {
+			$robots = get_option('blog_public');
+		}
 
 		if( !!get_option('blog_public') === !!$robots ) {
 			return;
@@ -163,21 +174,99 @@ class Helper
 	static public function tags( $id )
 	{
 		$elm = '';
-		$tags = get_the_tags($id);
+		$taxonomies = get_object_taxonomies(get_post_type());
+		$tags				= wp_get_object_terms($id, $taxonomies);
 
-		if( is_array($tags) ) {
+		if( !empty($tags) && !is_wp_error($tags) ) {
+
 			foreach( $tags as $tag ) {
 				$elm .= sprintf('<a href="%2$s" class="tag">%1$s</a>',
 					esc_html( $tag->name ),
 					esc_url( get_tag_link($tag->term_id) )
 				);
 			}
+
 		}
 		else {
 			$elm .= '<span class="no-tag">-</span>';
 		}
 
 		return $elm . PHP_EOL;
+	}
+
+	/**
+	 * pages
+	 *=====================================================*/
+	static public function paginations()
+	{
+		global $wp_query;
+
+		$paged = get_query_var('paged') ? : 1;
+		$max_pages = $wp_query->max_num_pages;
+
+		if( $max_pages <= 1) {
+			/* ページがない場合は返す */
+			return;
+		}
+
+		$page_list = [];
+		$range = 1;
+		$show_items = ($range * 2) + 1;
+
+		/* 一番最初のページへのリンク */
+		if( $paged > 2 && $show_items < $max_pages && $paged > $range + 1 ) {
+			$page_list[] = '<li><a href="' . get_pagenum_link(1) . '">&laquo;</a></li>' . PHP_EOL;
+		}
+		/* 一つ前のページへのリンク */
+		if( $paged > 1 && $show_items < $max_pages ) {
+			$page_list[] = '<li><a href="' . get_pagenum_link($paged - 1) . '">&lsaquo;</a></li>';
+		}
+
+		for( $i = 1; $i <= $max_pages; $i++ ) {
+			if( !($i < $paged - $range || $i > $paged + $range) ) {
+				$page_list[] = ( $paged === $i ) ? '<li><span class="current">' . $i . '</span></li>'
+																				 : '<li><a href="' . get_pagenum_link($i) . '">' . $i . '</a></li>';
+
+ 			}
+		}
+
+		/* 一つ後のページへのリンク */
+		if( $paged < $max_pages && $show_items < $max_pages ) {
+			$page_list[] = '<li><a href="' . get_pagenum_link($paged + 1) . '">&rsaquo;</a></li>';
+		}
+		/* 一番最後のページへのリンク */
+		if( $paged < $max_pages - 1 && $show_items < $max_pages && $paged > $range - 1 ) {
+			$page_list[] = '<li><a href="' . get_pagenum_link($max_pages) . '">&raquo;</a></li>' . PHP_EOL;
+		}
+
+		/**
+		 * 配列の階層によりindentを設定
+		 * _render()
+		 * @param array $array_elements = []
+		 * @param $indent = 0
+		 */
+		return self::_render([
+			'<div class="page-guide">' . $paged . 'of' . $max_pages . '</div>',
+			[
+				'<ul class="pager">',
+				$page_list,
+				'</ul>',
+			],
+		], 1);
+
+	}
+
+	private static function _render( array $array_elements = [], $indent = 0 )
+	{
+		$element = '';
+		foreach( $array_elements as $value ) {
+			if( is_array($value) ) {
+				$element .= self::_render($value, $indent + 1);
+				continue;
+			}
+			$element .= str_repeat( "\t",  $indent ) . $value . PHP_EOL;
+		}
+		return $element;
 	}
 
 }

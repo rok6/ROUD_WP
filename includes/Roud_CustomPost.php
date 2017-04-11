@@ -30,8 +30,10 @@ class Roud_CustomPost
     register_post_type('news', $cpt_args);
     $tax_args = array(
       'label'         => __('カテゴリー', self::$domain),
+      'public'        => true,
       'hierarchical'  => true,
       'show_in_rest'	=> true,
+      'show_admin_column'	=> true,
     );
     register_taxonomy('news_cat', 'news', $tax_args);
   }

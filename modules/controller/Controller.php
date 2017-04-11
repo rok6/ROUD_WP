@@ -45,7 +45,7 @@ class Controller
           ||
       ( $render_type !== '' && is_file( $file = $module_path . 'default-' . $render_type . '.php' ) )
           ||
-      ( is_file( $file = $module_path . 'default' . '.php' ) )
+      ( is_file( $file = $module_path . 'default.php' ) )
     ) {
       return $file;
     }

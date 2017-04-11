@@ -14,6 +14,7 @@ class Model
       'category'    => null,
       'exclude'     => null,
       'posts_per_page' => get_option('posts_per_page'),
+      'paged'					 => get_query_var('paged'),
     );
   }
 

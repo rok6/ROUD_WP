@@ -28,7 +28,7 @@ if( !class_exists('Roud') ) {
 
     private function default_init()
     {
-			//add_action('init', array( $this, 'unregister_tag_taxonomies' ));
+			// add_action('init', array( $this, 'unregister_tag_taxonomies' ));
 			add_action('init', array( $this, 'unregister_category_taxonomies' ));
 
 			if( is_admin() ) {
