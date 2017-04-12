@@ -4,121 +4,133 @@
  *=====================================================*/
 
 .entry-header {
-  .entry-title {
-    margin-bottom: 1.5em;
-  }
-  .post-thumbnail {
+	.entry-title {
+		margin-bottom: 1.5em;
+	}
+	.post-thumbnail {
 
-  }
+	}
 }
 
 .wp-editor,
 .entry-content {
-  h2 {
-    display: flex;
-    margin: 1.5em 0 0.5em;
-    align-items: center;
-    white-space: nowrap;
-    &::before,
-    &::after {
-      content: '';
-      display: block;
-      height: 3px;
-      background: #ddd;
-    }
-    &::before {
-      width: 4.5rem;
-      margin-left: -4.5rem;
-      margin-right: 2rem;
-    }
-    &::after {
-      width: 100%;
-      margin-left: 2.5rem;
-      margin-right: -4.5rem;
-    }
-  }
-  h3 {
-    margin: 1.5em 0 0.5em;
-    display: inline-block;
-    border-bottom: 1px solid #ccc;
-  }
-  h4 {
-    margin: 1.5em 0 1em;
-    color: #644A7E;
-  }
+	h2 {
+		display: flex;
+		margin: 1.5em 0;
+		align-items: center;
+		white-space: nowrap;
+		&::before,
+		&::after {
+			content: '';
+			display: block;
+			height: 3px;
+			background: #ddd;
+		}
+		&::before {
+			width: 4.5rem;
+			margin-left: -4.5rem;
+			margin-right: 2rem;
+		}
+		&::after {
+			width: 100%;
+			margin-left: 2.5rem;
+			margin-right: -4.5rem;
+		}
+	}
+	h2:first-of-type {
+		margin-top: 0.5em;
+	}
+	h3 {
+		margin: 1.5em 0 0.5em;
+		display: inline-block;
+		border-bottom: 1px solid #ccc;
+	}
+	h4 {
+		margin: 1.5em 0 1em;
+		color: #644A7E;
+	}
 
-  ul, ol {
-    margin: .5em 0 1.5em;
-  }
-  ul > li, ol > li {
-    position: relative;
-    margin-bottom: 0.25em;
-    padding-left: 1.25em;
-  }
-  ul > li::before {
-    content: '';
-    display: block;
-    width: .5em; height: .5em;
-    background: #555;
-    position: absolute;
-    top: 0.5em; left: 0;
-  }
-  ol {
-    counter-reset: Number_list;
-  }
-  ol > li::before {
-    counter-increment: Number_list;
-    content: counter(Number_list);
-    font-weight: bold;
-    color: #644A7E;
-    display: block;
-    width: .5em; height: .5em;
-    position: absolute;
-    top: 0; left: 0;
-  }
+	ul, ol {
+		margin: .5em 0 1.5em;
+	}
+	ul > li, ol > li {
+		position: relative;
+		margin-bottom: 0.25em;
+		padding-left: 1.5em;
+	}
+	ul > li::before {
+		content: '';
+		display: block;
+		width: .5em; height: .5em;
+		background: #555;
+		position: absolute;
+		top: 0.5em; left: 0;
+	}
+	ol {
+		counter-reset: Number_list;
+	}
+	ol > li {
+		margin-top: 1em;
+		padding-bottom: 0.5em;
+		border-bottom: 1px dashed #ddd;
+	}
+	ol > li::before {
+		counter-increment: Number_list;
+		content: counter(Number_list);
+		font-size: 0.8em;
+		color: #333;
+		border: 1px solid #aaa;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 0.2em;
+		width: 1.5em; height: 1.5em;
+		position: absolute;
+		top: 0.15em; left: 0;
+	}
 
 }
 
 .entry-footer {
-  display: flex;
-  & > * {
-    padding-right: 1em;
-  }
-  .entry-date {
-    .elapsed-time {
-      display: inline-block;
-      margin-right: 1em;
-      padding: 0.1em 0.5em;
-      font-size: 0.8em;
-      border: 1px solid #ccc;
-    }
-    .published {
-      &::before {
-        content: 'posted:';
-        margin-right: 0.5em;
-      }
-    }
-    .updated {
-      margin-left: 1em;
-      &::before {
-        content: 'updated:';
-        margin-right: 0.5em;
-      }
-    }
-  }
-  .post-author {
-    &::before {
-      content: 'author:';
-      margin-right: 0.5em;
-    }
-  }
-  .post-tags {
-    &::before {
-      content: 'tags:';
-      margin-right: 0.5em;
-    }
-    .tag {
-      margin-right: 0.5em;
-    }
-  }
+	display: flex;
+	& > * {
+		padding-right: 1em;
+	}
+	.entry-date {
+		.elapsed-time {
+			display: inline-block;
+			margin-right: 1em;
+			padding: 0.1em 0.5em;
+			font-size: 0.8em;
+			border: 1px solid #ccc;
+		}
+		.published {
+			&::before {
+				content: 'posted:';
+				margin-right: 0.5em;
+			}
+		}
+		.updated {
+			margin-left: 1em;
+			&::before {
+				content: 'updated:';
+				margin-right: 0.5em;
+			}
+		}
+	}
+	.post-author {
+		&::before {
+			content: 'author:';
+			margin-right: 0.5em;
+		}
+	}
+	.post-tags {
+		&::before {
+			content: 'tags:';
+			margin-right: 0.5em;
+		}
+		.tag {
+			margin-right: 0.5em;
+		}
+	}
 }

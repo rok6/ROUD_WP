@@ -8,17 +8,17 @@
 <?php wp_head(); ?>
 <?=Helper::robots()?>
 <link rel="profile" href="http://gmpg.org/xfn/11">
-<link type='text/css' rel='stylesheet' media='all' href='<?=get_template_directory_uri()?>/assets/css/style.css' />
+<link rel='stylesheet' media='all' href='<?=get_template_directory_uri()?>/assets/css/style.css' />
 </head>
 <body>
 
 <div id="wrapper">
 
 <header id="header" class="h">
-	<div class="title">
+	<div class="title fixed">
 		<?=Helper::logo(true)?>
 	</div>
-	<nav class="nav-container">
+	<nav class="nav-container fixed">
 		<?php wp_nav_menu( array(
 			'menu'					=> 'main_menu',
 			'container'			=> '',

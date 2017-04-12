@@ -1,92 +1,92 @@
 // main: ../../style.less
 
  /**
-  * Headding
-  *=====================================================*/
+	* Headding
+	*=====================================================*/
 h1,h2,h3,h4,h5,h6 {
-  a {
-    text-decoration: none;
-  }
+	a {
+		text-decoration: none;
+	}
 }
 h1 {
-  //font-size: 2.75em;
-  font-size: 2em;
+	//font-size: 2.75em;
+	font-size: 2em;
 }
 h2 {
-  //font-size: 2.25em;
-  font-size: 1.75em;
+	//font-size: 2.25em;
+	font-size: 1.75em;
 }
 h3 {
-  font-size: 1.5em;
+	font-size: 1.5em;
 }
 h4 {
-  font-size: 1.25em;
+	font-size: 1.25em;
 }
 h5 {
-  font-size: 1em;
+	font-size: 1em;
 }
 h6 {
-  font-size: 0.85em;
+	font-size: 0.85em;
 }
 
 /**
  * Typography
  *=====================================================*/
 
-/** -  inline  - **/
+/** -	inline	- **/
 p {
-  margin: 0 0 1em;
-  line-height: 1.65;
+	margin: 0 0 1em;
+	line-height: 1.65;
 }
 .lead {
-  font-size: 1.5em;
-  font-weight: 200;
-  line-height: 1.5;
+	font-size: 1.5em;
+	font-weight: 200;
+	line-height: 1.5;
 }
 strong {
-  font-weight: bold;
+	font-weight: bold;
 }
 em {
-  font-style: italic;
+	font-style: italic;
 }
 small {
-  font-size: 0.85em;
+	font-size: 0.85em;
 }
 a {
-  color: #08e;
+	color: #08e;
 }
 a:hover {
-  color: #035;
+	color: #035;
 }
 abbr[title], abbr[data-original-title] {
-    cursor: help;
-    border-bottom: 1px dotted #999;
+		cursor: help;
+		border-bottom: 1px dotted #999;
 }
 
-/** -  line  - **/
+/** -	line	- **/
 hr {
-  margin: 1.5em 0;
+	margin: 1.5em 0;
 }
 
-/** -  block  - **/
+/** -	block	- **/
 address {
-  display: block;
-  margin-bottom: 1.5em;
-  font-style: normal;
-  line-height: 1.5em;
+	display: block;
+	margin-bottom: 1.5em;
+	font-style: normal;
+	line-height: 1.5em;
 }
 
 blockquote {
-  position: relative;
-  margin-bottom: 0.5em;
-  padding: 1.5em 2em;
-  background: #eee;
+	position: relative;
+	margin-bottom: 0.5em;
+	padding: 1.5em 2em;
+	background: #eee;
 }
 blockquote::before {
-  position: absolute;
-  top: 1em; bototm: 1em;
-  left: 1em; right: 1em;
-  border-left: 5px solid #ddd;
+	position: absolute;
+	top: 1em; bototm: 1em;
+	left: 1em; right: 1em;
+	border-left: 5px solid #ddd;
 }
 
 
@@ -94,33 +94,33 @@ blockquote::before {
  * List
  *=====================================================*/
 
-/** -  common  - **/
+/** -	common	- **/
 ul, ol {
-  ul, ol {
-    margin: 0 0 0.75em 1.5em;
-  }
+	ul, ol {
+		margin: 0 0 0.75em 1.5em;
+	}
 }
 
-/** -  order  - **/
+/** -	order	- **/
 ol {
-  counter-reset: OrderList;
+	counter-reset: OrderList;
 
-  li {
+	li {
 
-  }
-  li::before {
-    counter-increment: OrderList;
-    content: counter(OrderList) '.';
-    margin-right: 0.5em;
-  }
+	}
+	li::before {
+		counter-increment: OrderList;
+		content: counter(OrderList) '.';
+		margin-right: 0.5em;
+	}
 }
 
-/** -  unorder  - **/
+/** -	unorder	- **/
 ul {
 
 }
 
-/** -  description  - **/
+/** -	description	- **/
 dl {
 
 }
@@ -136,19 +136,19 @@ dd {
  * Code
  *=====================================================*/
 pre, code {
-  border-radius: 3px;
+	border-radius: 3px;
 }
 pre {
-  overflow-x: scroll;
-  padding: 1.5em;
-  margin: 1em 0;
-  color: #ccc;
-  background-color: #222;
-  font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
+	overflow-x: scroll;
+	padding: 1.5em;
+	margin: 1em 0;
+	color: #ccc;
+	background-color: #222;
+	font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
 }
 code {
-  display: inline-block;
-  padding: 0 0.5em;
-  color: #ccc;
-  background-color: #333;
+	display: inline-block;
+	padding: 0 0.5em;
+	color: #ccc;
+	background-color: #333;
 }

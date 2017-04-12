@@ -61,7 +61,7 @@ class Helper
 
 		return sprintf(
 			'<meta name="robots" content="%1$s" />' . PHP_EOL,
-			esc_html( $robots ? 'index, follow' : 'noindex, follow'  )
+			esc_html( $robots ? 'index, follow' : 'noindex, follow' )
 		);
 	}
 
@@ -264,7 +264,7 @@ class Helper
 				$element .= self::_render($value, $indent + 1);
 				continue;
 			}
-			$element .= str_repeat( "\t",  $indent ) . $value . PHP_EOL;
+			$element .= str_repeat( "\t", $indent ) . $value . PHP_EOL;
 		}
 		return $element;
 	}
