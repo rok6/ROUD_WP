@@ -3,8 +3,9 @@ namespace Roud\module\controller;
 
 class Controller
 {
-	protected $views = array();
-	protected $params = array();
+	protected $view_vars	= [];
+	protected $params			= [];
+	protected $post_type	= '';
 
 	/**
 	 * render
@@ -12,7 +13,7 @@ class Controller
 	protected function render( $render_type = '' ) {
 
 		if( $file = $this->valid_views( $render_type ) ) {
-			extract($this->views);
+			extract($this->view_vars);
 			require( $file );
 		}
 
@@ -24,18 +25,30 @@ class Controller
 	protected function set( $name )
 	{
 		$this->$name = request_module( 'model', false, array(
-			'filename'  => $name,
+			'filename'	=> $name,
 		));
-		$this->params['post_type'] = $name;
-		$this->views['post'] = $this->$name->get($this->params);
+
+		$this->post_type = $name;
+
+		if( !is_search() ) {
+			//検索以外ではポストタイプをセット
+			$this->params['post_type'] = $name;
+			$this->view_vars['post_label'] = get_post_type_object($name)->label;
+		}
+
+		if( is_category() || is_tag() || is_tax() ) {
+			$this->view_vars['post_label'] = get_queried_object()->slug;
+		}
+
+		$this->view_vars['post'] = $this->$name->get($this->params);
 	}
 
 	private function valid_views( $render_type = '' )
 	{
 		$module_path = ROUD_MDLS_PATH . '/view/';
 		$filename = ( $render_type !== '' ) ?
-		$this->params['post_type'] . '-' . $render_type
-		: $this->params['post_type'];
+			$this->post_type . '-' . $render_type
+		: $this->post_type;
 
 		if( is_file( $file = $module_path . $filename . '.php' )
 						||

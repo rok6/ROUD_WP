@@ -64,7 +64,7 @@ class Roud_Options
 
 	public function require_options()
 	{
-		require_once(TEMPLATEPATH . '/settings/options.php');
+		require_once(TEMPLATEPATH . '/modules/setting/options.php');
 	}
 
 	private function reset_wp_options_general()

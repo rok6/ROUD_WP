@@ -2,7 +2,7 @@
 
 <main id="main" role="main">
 
-  <?php component('default', 'list'); ?>
+	<?php component('default', 'list'); ?>
 
 </main><!--#main-->
 

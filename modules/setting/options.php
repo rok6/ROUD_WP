@@ -36,15 +36,15 @@
 	</tr>
 
 	<tr>
-    <th scope="row"><label for="twitter"><?php _e( 'Twitterアカウント' ); ?></label></th>
-    <td>
+		<th scope="row"><label for="twitter"><?php _e( 'Twitterアカウント' ); ?></label></th>
+		<td>
 			<input name="twitter" type="text" value="<?php form_option('twitter'); ?>" class="regular-text">
 		</td>
 	</tr>
 
-  <tr>
-    <th scope="row"><label for="facebook"><?php _e( 'Facebookアカウント' ); ?></label></label></th>
-    <td>
+	<tr>
+		<th scope="row"><label for="facebook"><?php _e( 'Facebookアカウント' ); ?></label></label></th>
+		<td>
 			<input name="facebook" type="text" value="<?php form_option('facebook'); ?>" class="regular-text">
 		</td>
 	</tr>

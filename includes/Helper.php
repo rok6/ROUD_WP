@@ -95,8 +95,7 @@ class Helper
 			)
 		: esc_html( get_the_title($id) );
 
-		return sprintf(
-			'<h%1$d>%2$s</h%1$d>',
+		return sprintf('<h%1$d>%2$s</h%1$d>' . PHP_EOL,
 			(int)$level,
 			(string)$title
 		);
@@ -138,10 +137,12 @@ class Helper
 		$updated						= get_post_modified_time($format, false, $id);
 		$updated_datetime		= get_post_modified_time(DATE_W3C, false, $id);
 
-		$entry_date .= sprintf(
-			'<span class="elapsed-time">%1$s前</span>',
-			human_time_diff( get_post_modified_time('U', false, $id), date_i18n('U') )
-		);
+		if( is_single() ) {
+			$entry_date .= sprintf(
+				'<span class="elapsed-time">%1$s前</span>',
+				human_time_diff( get_post_modified_time('U', false, $id), date_i18n('U') )
+			);
+		}
 
 		$entry_date .= sprintf(
 			'<time datetime="%1$s" class="published">%2$s</time>',
@@ -165,7 +166,9 @@ class Helper
 	static public function content()
 	{
 		the_post();
-		return PHP_EOL . str_replace( ']]>', ']]&gt;', apply_filters('the_content', get_the_content()) ) . PHP_EOL;
+		return sprintf( PHP_EOL . '<!-- Content -->' . PHP_EOL . '%1$s' . '<!-- //Content -->' . PHP_EOL . PHP_EOL,
+			str_replace( ']]>', ']]&gt;', apply_filters('the_content', get_the_content()) )
+		);
 	}
 
 	/**
@@ -200,17 +203,20 @@ class Helper
 	static public function paginations()
 	{
 		global $wp_query;
-
-		$paged = get_query_var('paged') ? : 1;
 		$max_pages = $wp_query->max_num_pages;
 
+		//現在の表示ページ
+		$paged = get_query_var('paged') ? : 1;
+
 		if( $max_pages <= 1) {
-			/* ページがない場合は返す */
+			/* 表示が1ページのみの場合は返す */
 			return;
 		}
 
 		$page_list = [];
+		//ページャーの表示範囲　ex. $range = 1, $paged = 2 の場合、1 2 3 となる
 		$range = 1;
+		//現在表示されているページャーのナンバリングの数
 		$show_items = ($range * 2) + 1;
 
 		/* 一番最初のページへのリンク */
@@ -226,7 +232,6 @@ class Helper
 			if( !($i < $paged - $range || $i > $paged + $range) ) {
 				$page_list[] = ( $paged === $i ) ? '<li><span class="current">' . $i . '</span></li>'
 																				 : '<li><a href="' . get_pagenum_link($i) . '">' . $i . '</a></li>';
-
  			}
 		}
 
@@ -246,12 +251,16 @@ class Helper
 		 * @param $indent = 0
 		 */
 		return self::_render([
-			'<div class="page-guide">' . $paged . 'of' . $max_pages . '</div>',
+			'<!-- .pagination -->',
+			'<div class="pagination">',
 			[
+				'<div class="page-guide">' . $paged . 'of' . $max_pages . '</div>',
 				'<ul class="pager">',
 				$page_list,
 				'</ul>',
 			],
+			'</div>',
+			'<!-- //.pagination -->',
 		], 1);
 
 	}
@@ -266,7 +275,7 @@ class Helper
 			}
 			$element .= str_repeat( "\t", $indent ) . $value . PHP_EOL;
 		}
-		return $element;
+		return PHP_EOL . $element;
 	}
 
 }

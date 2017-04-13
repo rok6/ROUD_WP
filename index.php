@@ -1,9 +1,9 @@
 <?php get_header(); ?>
 
 <main id="main" role="main">
-	
-	<h1>index</h1>
 
-</main>
+	<?php component('default', 'list'); ?>
+
+</main><!--#main-->
 
 <?php get_footer();
