@@ -31,13 +31,7 @@ class Controller
 		$this->post_type = $name;
 
 		if( !is_search() ) {
-			//検索以外ではポストタイプをセット
 			$this->params['post_type'] = $name;
-			$this->view_vars['post_label'] = get_post_type_object($name)->label;
-		}
-
-		if( is_category() || is_tag() || is_tax() ) {
-			$this->view_vars['post_label'] = get_queried_object()->slug;
 		}
 
 		$this->view_vars['post'] = $this->$name->get($this->params);

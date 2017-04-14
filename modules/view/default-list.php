@@ -1,7 +1,11 @@
 
+	<div class="breadcrumb">
+		<?=Helper::breadcrumb()?>
+	</div>
+
 	<div class="recent-post post-list container">
 		<div class="headding">
-			<h2><?=$post_label?></h2>
+			<h2><?=Helper::headline()?></h2>
 		</div>
 		<ul><?php foreach( $post as $key => $data ) : ?>
 

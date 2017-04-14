@@ -1,7 +1,11 @@
 
+	<div class="breadcrumb">
+		<?=Helper::breadcrumb()?>
+	</div>
+
 	<div class="search-result post-list container">
 			<div class="headding">
-				<h2>"<?=get_search_query()?>" の検索結果<span class="result_count"><?=$found_posts?>件</span></h2>
+				<h2>"<?=Helper::headline()?>" の検索結果<span class="result_count"><?=$found_posts?>件</span></h2>
 			</div>
 		<ul class="container"><?php foreach( $post as $key => $data ) : ?>
 

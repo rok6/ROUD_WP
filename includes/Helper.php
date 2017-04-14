@@ -83,6 +83,46 @@ class Helper
 		);
 	}
 
+
+	/**
+	 * headline
+	 *=====================================================*/
+	static public function headline()
+	{
+		$label = '';
+
+		if( is_search() ) {
+			$label = get_search_query();
+		}
+
+		else if( is_front_page() ) {
+			$label = __('What\'s new');
+		}
+
+		else if( is_home() ) {
+			$label = get_queried_object()->post_title;
+		}
+
+		else {
+			$label = get_post_type_object( get_post_type() )->label;
+		}
+
+		if( is_category() || is_tag() || is_tax() ) {
+			$label = get_queried_object()->slug;
+		}
+
+		return esc_html($label);
+	}
+
+
+	/**
+	 * breadcrumb
+	 *=====================================================*/
+	static public function breadcrumb()
+	{
+		$home_url = home_url();
+	}
+
 	/**
 	 * title
 	 *=====================================================*/
