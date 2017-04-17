@@ -1,6 +1,6 @@
 <?php
 
-class Roud_Navigation
+class WPRD_Navigation
 {
 	static private $domain;
 
@@ -17,7 +17,18 @@ class Roud_Navigation
 			'social'		=> __('ソーシャル', self::$domain),
 		]);
 
-		/*	管理画面出力の整形	*/
+		/*	管理画面のカスタムメニューの位置変更	*/
+		if( is_admin() ) {
+			$this->reorder_custom_nav_menu();
+		}
+
+		$this->recreate_nav_menu();
+
+	}
+
+	private function recreate_nav_menu()
+	{
+		/*	カスタムメニューの整形	*/
 		add_filter('wp_nav_menu_args', function( array $args ) {
 			$args['indent'] = isset($args['indent']) ? $args['indent'] + 1 : 0;
 			$indent = str_repeat( "\t", $args['indent'] + 1 );
@@ -35,30 +46,25 @@ class Roud_Navigation
 		add_filter('wp_nav_menu', function( $wp_nav_menu ) {
 			return $wp_nav_menu . PHP_EOL;
 		});
-
-		/*	管理画面のカスタムメニューの位置変更	*/
-		if( is_admin() ) {
-			add_action('admin_menu', array( $this, 'reset_filter_primary_nav_menu' ));
-		}
 	}
 
 	//外観サブメニュー内のメニュー項目を外部に出す
-	public function reset_filter_primary_nav_menu()
+	private function reorder_custom_nav_menu()
 	{
-		//メニューをサブメニューから除去
-		remove_submenu_page( 'themes.php','nav-menus.php' );
-		//メインメニュー内に"メニュー"として追加
-		add_menu_page(
-			__( 'メニュー', self::$domain ),
-			__( 'メニュー', self::$domain ),
-			'edit_theme_options',
-			'nav-menus.php',
-			'',
-			null,
-			5
-		);
-
+		add_action('admin_menu', function(){
+			remove_submenu_page('themes.php', 'nav-menus.php');
+			add_menu_page(
+				__( 'メニュー', self::$domain ),
+				__( 'メニュー', self::$domain ),
+				'edit_theme_options',
+				'nav-menus.php',
+				'',
+				null,
+				5
+			);
+		});
 	}
+
 }
 
 

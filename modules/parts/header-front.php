@@ -27,5 +27,6 @@
 	</nav>
 	<div class="search h-item">
 		<?php get_search_form(); ?>
+		
 	</div>
 </header>

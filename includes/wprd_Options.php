@@ -1,6 +1,6 @@
 <?php
 
-class Roud_Options
+class WPRD_Options
 {
 	static private $domain;
 

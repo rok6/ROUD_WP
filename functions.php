@@ -1,25 +1,18 @@
 <?php
 
 if( !defined('ROUD_INC_PATH') ) {
-  define('ROUD_INC_PATH' , dirname(__FILE__) . '/includes');
+	define('ROUD_INC_PATH' , dirname(__FILE__) . '/includes');
 }
 if( !defined('ROUD_MDLS_PATH') ) {
-  define('ROUD_MDLS_PATH' , dirname(__FILE__) . '/modules');
+	define('ROUD_MDLS_PATH' , dirname(__FILE__) . '/modules');
 }
 
 add_action('after_setup_theme', function () {
-  require_once dirname(__FILE__) . '/includes/Functions.php';
-  require_once dirname(__FILE__) . '/includes/Roud.php';
-  require_once dirname(__FILE__) . '/config.php';
+	require_once dirname(__FILE__) . '/includes/Functions.php';
+	require_once dirname(__FILE__) . '/includes/wprd.php';
+	require_once dirname(__FILE__) . '/initialize.php';
 }, 0);
 
 add_action('after_setup_theme', function () {
-  $Roud = new Roud();
-  $Roud->cmb2->init();
-  $Roud->custom_post->add(['news', 'illurweb']);
+	$wprd = new WPRD();
 }, 9999);
-
-// ローカルでのメール送信アクション様
-add_filter('wp_mail_from', function() {
-	return 'wordpress@example.com';
-});

@@ -42,27 +42,27 @@ class Helper
 	 *=====================================================*/
 	static public function robots()
 	{
-		$robots = false;
-
-		if( is_archive() ) {
-			$robots = false;
-		}
-
-		if( isset(get_post_custom()['meta_robots'][0]) ) {
-			$robots = get_post_custom()['meta_robots'][0];
-		}
-		else {
-			$robots = get_option('blog_public');
-		}
-
-		if( !!get_option('blog_public') === !!$robots ) {
+		//全体の公開設定が非公開の時はスルー
+		if( !$public = get_option('blog_public') ) {
 			return;
 		}
 
-		return sprintf(
-			'<meta name="robots" content="%1$s" />' . PHP_EOL,
-			esc_html( $robots ? 'index, follow' : 'noindex, follow' )
-		);
+		//カスタムフィールドの値を取得
+		if( isset(get_post_custom()['meta_robots'][0]) ) {
+			$public = get_post_custom()['meta_robots'][0];
+		}
+
+		//アーカイブページは共通して noindex 設定にする
+		if( is_archive() ) {
+			$public = false;
+		}
+
+		//取得した値が true の場合はスルー
+		if( !!$public ) {
+			return;
+		}
+
+		return '<meta name="robots" content="noindex, follow" />' . PHP_EOL;
 	}
 
 	/**
@@ -71,7 +71,9 @@ class Helper
 	static public function description()
 	{
 		$desc = get_post_custom();
-		$desc = ( isset($desc['meta_desc'][0]) ) ? $desc['meta_desc'][0] : get_bloginfo('description');
+		$desc = ( isset($desc['meta_description'][0]) && $desc['meta_description'][0] !== '' ) ?
+			$desc['meta_description'][0]
+		: ( is_front_page() ) ? get_bloginfo('description') : '';
 
 		if( $desc === '' ) {
 			return;
@@ -305,7 +307,7 @@ class Helper
 
 	}
 
-	private static function _render( array $array_elements = [], $indent = 0 )
+	public static function _render( array $array_elements = [], $indent = 0 )
 	{
 		$element = '';
 		foreach( $array_elements as $value ) {

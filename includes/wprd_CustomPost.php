@@ -1,6 +1,6 @@
 <?php
 
-class Roud_CustomPost
+class WPRD_CustomPost
 {
 	static private $domain;
 
@@ -18,39 +18,43 @@ class Roud_CustomPost
 		}
 	}
 
+	/**
+	 * New Posts
+	 *=====================================================*/
+
 	private function news()
 	{
-		$cpt_args = array(
+		$cpt_args = [
 			'label'					=> 'NEWS',
 			'public'				=> true,
 			'has_archive'		=> true,
 			'show_in_rest'	=> true,
 			'menu_position' => 5,
-		);
+		];
 		register_post_type('news', $cpt_args);
-		$tax_args = array(
+		$tax_args = [
 			'label'					=> __('カテゴリー', self::$domain),
 			'public'				=> true,
 			'hierarchical'	=> true,
 			'show_in_rest'	=> true,
 			'show_admin_column'	=> true,
-		);
+		];
 		register_taxonomy('news_cat', 'news', $tax_args);
 	}
 
 	private function illurweb()
 	{
-		$cpt_args = array(
+		$cpt_args = [
 			'label'					=> __('ILLURWEB', self::$domain),
 			'public'				=> true,
 			'has_archive'		=> true,
 			'hierarchical'	=> true,
 			'show_in_rest'	=> true,
 			'menu_position'	=> 5,
-			'support'				=> array(
+			'support'				=> [
 				'page-attributes',
-			),
-		);
+			],
+		];
 		register_post_type('illurweb', $cpt_args);
 	}
 

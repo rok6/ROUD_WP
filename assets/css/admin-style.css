@@ -2,9 +2,22 @@
  * admin_post-list
  *=====================================================*/
 
+.fixed .column-categories,
+.fixed .column-tags {
+	width: 10%;
+}
+
 .fixed .column-meta_description {
-	width: 25%;
+	width: 20%;
 }
 .fixed .column-meta_robots {
 	width: 10%;
+}
+
+#wpbody-content .inline-edit-row .inline-custom-meta {
+	clear: both;
+	margin-top: 0.5em;
+}
+#wpbody-content .inline-edit-row-page .inline-edit-col-right {
+	margin-top: 0;
 }
