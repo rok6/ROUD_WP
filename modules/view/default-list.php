@@ -27,4 +27,4 @@
 		</ul>
 	</div>
 
-	<?=Helper::paginations()?>
+	<?=Helper::post_paginations()?>

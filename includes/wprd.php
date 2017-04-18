@@ -12,20 +12,19 @@ class WPRD
 
 	public function __construct( $domain = 'wprd' )
 	{
+
 		//言語ファイルのフォルダ名を指定
 		$this->set_load_theme_textdomain('languages');
-		//管理画面用CSSの追加
-		$this->add_admin_style();
 		//サポートの有効化
 		$this->add_supports();
-		//Editor CSS へのパス
-		add_editor_style( '/assets/css/editor-style.css' );
+		//リダイレクト時の推測候補先への遷移を禁止
+		$this->remove_auto_redirect();
 
 		// ローカルでのメール送信アクション用
 		add_filter('wp_mail_from', function() {
 			return 'wordpress@example.com';
 		});
-
+		
 		new WPRD_Organize( self::$domain );
 		new WPRD_Navigation( self::$domain );
 		new WPRD_CMB2( self::$domain );
@@ -33,14 +32,14 @@ class WPRD
 		new WPRD_Options( self::$domain );
 
 		$this->custom_post = new WPRD_CustomPost( self::$domain );
-		$this->custom_post->add(['news',]);
+		$this->custom_post->add(['news', 'wordpress']);
 	}
 
 	/**
 	 * Methods
 	 *=====================================================*/
 
-	private function add_supports()
+	public function add_supports()
 	{
 		//編集ショートカットの有効化
 		add_theme_support('customize-selective-refresh-widgets');
@@ -79,15 +78,24 @@ class WPRD
 	}
 
 
-	private function set_load_theme_textdomain( $folder = 'languages' )
+	public function set_load_theme_textdomain( $folder = 'languages' )
 	{
 		load_theme_textdomain(get_template_directory() . '/' . $folder);
 	}
 
 
-	private function add_admin_style(){
-		add_action('admin_enqueue_scripts', function() {
-			wp_enqueue_style( 'my_admin_style', get_template_directory_uri().'/assets/css/admin-style.css' );
+	public function add_admin_style( $css_path = 'admin-style.css' ){
+		add_action('admin_enqueue_scripts', function() use($css_path) {
+			wp_enqueue_style( 'my_admin_style', get_template_directory_uri().$css_path );
+		});
+	}
+
+	public function remove_auto_redirect() {
+		add_filter( 'redirect_canonical', function($redirect_url) {
+			if( is_404() ) {
+				return false;
+			}
+			return $redirect_url;
 		});
 	}
 

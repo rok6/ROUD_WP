@@ -5,6 +5,8 @@ class WPRD_CMB2
 	static private $domain;
 	static private $allow_posts = [];
 
+	private $custom_fields = null;
+
 	public function __construct( $domain )
 	{
 		if( !is_admin() ) {
@@ -23,9 +25,12 @@ class WPRD_CMB2
 			if( is_plugin_active('cmb2/init.php') ) {
 
 				add_action('cmb2_init', function() {
-					$this->add_meta_fields();
+					$this->custom_fields = $this->add_meta_fields();
 					/* admin columns */
-					$this->custom_admin_columns();
+					$this->custom_admin_columns([
+						'meta_description'	=> __('Meta Description', self::$domain),
+						'meta_robots'				=> __('Meta Robots', self::$domain),
+					]);
 				});
 
 			}
@@ -69,6 +74,8 @@ class WPRD_CMB2
 				'maxlength' => 120,
 			],
 		]);
+
+		return $cmb;
 	}
 
 	/* コールバックサンプル */
@@ -84,11 +91,72 @@ class WPRD_CMB2
 	/**
 	 * Admin Columns
 	 *=====================================================*/
-	private function custom_admin_columns()
+	private function custom_admin_columns( array $field_names )
 	{
-		$this->add_columns();
-		$this->add_quickedit();
 		$this->add_cmb2_scripts_in_admin();
+		$this->add_quickedit($field_names);
+
+		foreach( self::$allow_posts as $post_type) {
+
+			if( $post_type === 'post' ) {
+				$post_type = 'posts';
+			}
+			else if( $post_type === 'page' ) {
+				$post_type = 'pages';
+			}
+			else {
+				$post_type .= '_posts';
+			}
+
+			add_filter('manage_'.$post_type.'_columns', function($columns, $post_type) use($field_names) {
+				unset($columns['author']);
+				$reorders = [];
+
+				foreach( $columns as $key => $value ) {
+					$reorders[$key] = $value;
+					if( $key === 'title' && $post_type === 'post' ) {
+						foreach ($field_names as $field_key => $field_label) {
+							$reorders[$field_key] = $field_label;
+						}
+					}
+				}
+
+				return $columns = $reorders;
+			}, 10, 2);
+
+
+			add_filter('manage_'.$post_type.'_custom_column', function($column_name, $post_id) use($field_names) {
+
+				if( !in_array($column_name, array_keys($field_names), true) ) {
+					return;
+				}
+
+				$meta = get_post_custom($post_id);
+				$field_args = $this->get_column_field($column_name, $meta);
+
+				echo esc_html($field_args['value']);
+			}, 10, 2);
+
+		}
+	}
+
+
+	private function get_column_field($column_name, $meta)
+	{
+		$field = $this->custom_fields->get_field($column_name);
+		$field_args = [];
+		$field_args['type'] = $field->args['type'];
+		$value = ( isset($meta[$column_name][0]) ) ? $meta[$column_name][0] : $field->args['default'];
+
+		if( false !== strpos($field_args['type'], 'select') ) {
+			$field_args['options'] = $field->args['options'];
+			$field_args['value'] = $field->args['options'][$value];
+		}
+		else {
+			$field_args['value'] = $value;
+		}
+
+		return $field_args;
 	}
 
 
@@ -104,99 +172,38 @@ class WPRD_CMB2
 	}
 
 
-	private function add_columns()
+	private function add_quickedit($field_names)
 	{
-
-		foreach( self::$allow_posts as $post_type) {
-
-			if( $post_type === 'post' ) {
-				$post_type = 'posts';
-			}
-			else if( $post_type === 'page' ) {
-				$post_type = 'pages';
-			}
-			else {
-				$post_type .= '_posts';
-			}
-
-			/**
-			 * カラムの追加
-			 */
-			add_filter('manage_'.$post_type.'_columns', function($columns, $post_type) {
-
-				unset($columns['author']);
-				$reorders = [];
-
-				foreach( $columns as $key => $value ) {
-					$reorders[$key] = $value;
-					if( $key === 'title' && $post_type === 'post' ) {
-						$reorders['meta_description'] = __('Meta Description', self::$domain);
-						$reorders['meta_robots'] = __('Meta Robots', self::$domain);
-					}
-				}
-
-				return $columns = $reorders;
-			}, 10, 2);
-
-			/**
-			 * 投稿ごとの値の表示
-			 */
-			add_filter('manage_'.$post_type.'_custom_column', function($column_name, $post_id) {
-
-				switch( $column_name ) {
-
-					case 'meta_description':
-						$desc = get_post_custom($post_id);
-						$desc = ( isset($desc['meta_description'][0]) ) ? $desc['meta_description'][0] : '';
-						echo esc_attr($desc);
-						break;
-
-					case 'meta_robots':
-						$robots = get_post_custom($post_id);
-						$robots = ( isset($robots['meta_robots'][0]) ) ? $robots['meta_robots'][0] : get_option('blog_public');
-						echo esc_html( $robots ? 'index, follow' : 'noindex, follow' );
-						break;
-				}
-
-			}, 10, 2);
-
-		}
-
-	}
-
-
-	private function add_quickedit()
-	{
-		add_action( 'quick_edit_custom_box', function($column_name, $post_type) {
+		add_action( 'quick_edit_custom_box', function($column_name, $post_type) use($field_names) {
 			static $print_nonce = true;
 
 			if( $print_nonce ) {
-				$print_nonce = FALSE;
+				$print_nonce = false;
 				wp_nonce_field( 'quick_edit_action', $post_type . '_edit_nonce' );
 			}
 
-			switch( $column_name ) {
+			if( !in_array($column_name, array_keys($field_names), true) ) {
+				return;
+			}
 
-				case 'meta_description':
-					$label = [
-						'<span class="title">description</span>',
-						'<textarea name="meta_description" maxlength="120"></textarea>',
-					];
-					break;
+			$label = [''];
+			$field = $this->custom_fields->get_field($column_name);
+			$type = $field->args['type'];
 
-				case 'meta_robots':
-					$label = [
-						'<span class="title">robots</span>',
-						'<select name="meta_robots">',
-						[
-							'<option value="0">noindex, follow</option>',
-							'<option value="1">index, follow</option>',
-						],
-						'</select>',
-					];
-					break;
 
-				default: $label = '';
+			$label[] = '<span class="title">'. $field_names[$column_name] .'</span>';
+
+			if( false !== strpos($type, 'textarea') ) {
+				$label[] = '<textarea name="'. $column_name .'"></textarea>';
+			}
+
+			if( false !== strpos($type, 'select') ) {
+				$options = $field->args['options'];
+				$label[] = '<select name="'. $column_name .'">';
+				foreach ($options as $key => $value) {
+					$label[] = '<option value="'. $key .'">'. $value .'</option>';
+				}
+				$label[] = '</select>';
 			}
 
 			echo Helper::_render([
@@ -216,7 +223,7 @@ class WPRD_CMB2
 		}, 10, 2 );
 
 
-		add_action('save_post', function($post_id) {
+		add_action('save_post', function($post_id) use($field_names) {
 
 			if( false === $k = array_search(get_post_type( $post_id ), self::$allow_posts, true) ) {
 				return;
@@ -234,12 +241,10 @@ class WPRD_CMB2
 				return;
 			}
 
-			if( isset( $_REQUEST['meta_description'] ) ) {
-				update_post_meta( $post_id, 'meta_description', $_REQUEST['meta_description'] );
-			}
-
-			if( isset( $_REQUEST['meta_robots'] ) ) {
-				update_post_meta( $post_id, 'meta_robots', $_REQUEST['meta_robots'] );
+			foreach ($field_names as $key => $value) {
+				if( isset( $_REQUEST[$key] ) ) {
+					update_post_meta( $post_id, $key, $_REQUEST[$key] );
+				}
 			}
 
 		});

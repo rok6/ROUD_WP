@@ -2,7 +2,7 @@
 
 <main id="main" class="single" role="main">
 
-  <?php component('default', 'single'); ?>
+	<?php component('default', 'single'); ?>
 
 </main><!--#main-->
 

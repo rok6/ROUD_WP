@@ -13,11 +13,28 @@
 .fixed .column-meta_robots {
 	width: 10%;
 }
-
+.inline-custom-meta .title {
+	white-space: nowrap;
+}
 #wpbody-content .inline-edit-row .inline-custom-meta {
 	clear: both;
 	margin-top: 0.5em;
 }
 #wpbody-content .inline-edit-row-page .inline-edit-col-right {
 	margin-top: 0;
+}
+
+
+/**
+ * Tiny MCE
+ *=====================================================*/
+.mce-btn-group .mce-txt {
+	font-weight: bold;
+	font-size: 0.925em !important;
+	color: #555 !important;
+}
+.mce-i-code::before {
+	content: '\f499' !important;
+	font-family: dashicons;
+	font-size: 1.25em !important;
 }

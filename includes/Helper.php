@@ -209,7 +209,7 @@ class Helper
 	{
 		the_post();
 		return sprintf( PHP_EOL . '<!-- Content -->' . PHP_EOL . '%1$s' . '<!-- //Content -->' . PHP_EOL . PHP_EOL,
-			str_replace( ']]>', ']]&gt;', apply_filters('the_content', get_the_content()) )
+			str_replace( ']]>', ']]&gt;', apply_filters('the_content', get_the_content( '続きを表示する' )) )
 		);
 	}
 
@@ -242,61 +242,82 @@ class Helper
 	/**
 	 * pages
 	 *=====================================================*/
-	static public function paginations()
+	static public function post_paginations()
 	{
 		global $wp_query;
-		$max_pages = $wp_query->max_num_pages;
 
-		//現在の表示ページ
-		$paged = get_query_var('paged') ? : 1;
+		$max = $wp_query->max_num_pages;
 
-		if( $max_pages <= 1) {
-			/* 表示が1ページのみの場合は返す */
+		if( $max <= 1) {
 			return;
 		}
 
+		$current = get_query_var('paged') ? : 1;
+		$range = 2;
+
+		return self::_pager( $max, $current, $range );
+	}
+
+	public static function page_links()
+	{
+		global $page, $numpages, $multipage, $more;
+
+		if( !$multipage ) {
+			return;
+		}
+
+		$max = $numpages;
+		$current = $page;
+		$range = 2;
+
+		return self::_pager( $max, $current, $range, 'page-links' );
+	}
+
+	private static function _pager( $max, $current, $range = 2, $class = '' )
+	{
 		$page_list = [];
-		//ページャーの表示範囲　ex. $range = 1, $paged = 2 の場合、1 2 3 となる
-		$range = 1;
-		//現在表示されているページャーのナンバリングの数
 		$show_items = ($range * 2) + 1;
 
 		/* 一番最初のページへのリンク */
-		if( $paged > 2 && $show_items < $max_pages && $paged > $range + 1 ) {
-			$page_list[] = '<li><a href="' . get_pagenum_link(1) . '">&laquo;</a></li>' . PHP_EOL;
+		if( $current > $range + 1 ) {
+			$page_list[] = '<li><a href="' . self::_page_link(1) . '">&laquo;</a></li>' . PHP_EOL;
 		}
 		/* 一つ前のページへのリンク */
-		if( $paged > 1 && $show_items < $max_pages ) {
-			$page_list[] = '<li><a href="' . get_pagenum_link($paged - 1) . '">&lsaquo;</a></li>';
+		if( $current > 1 ) {
+			$page_list[] = '<li><a href="' . self::_page_link($current - 1) . '">&lsaquo;</a></li>';
 		}
 
-		for( $i = 1; $i <= $max_pages; $i++ ) {
-			if( !($i < $paged - $range || $i > $paged + $range) ) {
-				$page_list[] = ( $paged === $i ) ? '<li><span class="current">' . $i . '</span></li>'
-																				 : '<li><a href="' . get_pagenum_link($i) . '">' . $i . '</a></li>';
+		for( $i = 1; $i <= $max; $i++ ) {
+			if( !($i < $current - $range || $i > $current + $range) ) {
+				$page_list[] = ( $current === $i ) ? '<li><span class="current">' . $i . '</span></li>'
+																				 	 : '<li><a href="' . self::_page_link($i) . '">' . $i . '</a></li>';
  			}
 		}
 
 		/* 一つ後のページへのリンク */
-		if( $paged < $max_pages && $show_items < $max_pages ) {
-			$page_list[] = '<li><a href="' . get_pagenum_link($paged + 1) . '">&rsaquo;</a></li>';
+		if( $current < $max ) {
+			$page_list[] = '<li><a href="' . self::_page_link($current + 1) . '">&rsaquo;</a></li>';
 		}
 		/* 一番最後のページへのリンク */
-		if( $paged < $max_pages - 1 && $show_items < $max_pages && $paged > $range - 1 ) {
-			$page_list[] = '<li><a href="' . get_pagenum_link($max_pages) . '">&raquo;</a></li>' . PHP_EOL;
+		if( $current < $max - $range ) {
+			$page_list[] = '<li><a href="' . self::_page_link($max) . '">&raquo;</a></li>' . PHP_EOL;
 		}
 
-		/**
-		 * 配列の階層によりindentを設定
-		 * _render()
-		 * @param array $array_elements = []
-		 * @param $indent = 0
-		 */
+
+		if( $class !== '' ) {
+
+			if( is_array($class) ) {
+				$class = implode(' ', $class);
+			}
+
+			$class = ' ' . $class;
+		}
+
 		return self::_render([
 			'<!-- .pagination -->',
-			'<div class="pagination">',
+			'<div class="pagination'. esc_attr($class) .'">',
 			[
-				'<div class="page-guide">' . $paged . 'of' . $max_pages . '</div>',
+				'<div class="page-guide">' . $current . 'of' . $max . '</div>',
 				'<ul class="pager">',
 				$page_list,
 				'</ul>',
@@ -304,7 +325,23 @@ class Helper
 			'</div>',
 			'<!-- //.pagination -->',
 		], 1);
+	}
 
+	private static function _page_link( $page = 1 )
+	{
+		$page = (int)$page;
+
+		if( !is_single() ) {
+			$page_link = get_pagenum_link($page);
+		}
+		else {
+			$page_link = get_the_permalink();
+			if( $page > 1 ) {
+				$page_link .= $page . '/';
+			}
+		}
+
+		return esc_url($page_link);
 	}
 
 	public static function _render( array $array_elements = [], $indent = 0 )

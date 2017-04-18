@@ -28,7 +28,6 @@
 				$meta_robots = 0;
 			}
 			$( ':input[name="meta_robots"]', $edit_row ).children().eq($meta_robots).attr('selected', true );
-			console.log($( ':input[name="meta_robots"]', $edit_row ));
 		}
 	};
 

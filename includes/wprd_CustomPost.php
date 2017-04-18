@@ -24,14 +24,14 @@ class WPRD_CustomPost
 
 	private function news()
 	{
-		$cpt_args = [
+		$custompost_args = [
 			'label'					=> 'NEWS',
 			'public'				=> true,
 			'has_archive'		=> true,
 			'show_in_rest'	=> true,
 			'menu_position' => 5,
 		];
-		register_post_type('news', $cpt_args);
+		register_post_type('news', $custompost_args);
 		$tax_args = [
 			'label'					=> __('カテゴリー', self::$domain),
 			'public'				=> true,
@@ -42,10 +42,10 @@ class WPRD_CustomPost
 		register_taxonomy('news_cat', 'news', $tax_args);
 	}
 
-	private function illurweb()
+	private function wordpress()
 	{
-		$cpt_args = [
-			'label'					=> __('ILLURWEB', self::$domain),
+		$custompost_args = [
+			'label'					=> __('WordPress', self::$domain),
 			'public'				=> true,
 			'has_archive'		=> true,
 			'hierarchical'	=> true,
@@ -55,7 +55,7 @@ class WPRD_CustomPost
 				'page-attributes',
 			],
 		];
-		register_post_type('illurweb', $cpt_args);
+		register_post_type('wordpress', $custompost_args);
 	}
 
 }

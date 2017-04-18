@@ -8,11 +8,19 @@ class WPRD_Editor
 	{
 		self::$domain = $domain;
 
-		add_action( 'admin_enqueue_scripts', function($hook) {
+		add_action('admin_enqueue_scripts', function($hook) {
 			if( !('post.php' === $hook || 'post-new.php' === $hook) ) {
 				return;
 			}
-			wp_enqueue_script( 'my_custom_script', get_template_directory_uri().'/assets/js/admin_mce_editor.js', false, null, true );
+			wp_enqueue_script( 'my_custom_script', get_template_directory_uri().'/assets/js/admin_mce_textEditor.js', false, null, true );
+		});
+
+		add_filter('mce_external_plugins', function($plugins) {
+			//独自ボタン
+			$plugins['custom_button_script'] = get_template_directory_uri() . '/assets/js/admin_mce_plugin.js';
+			//テーブルプラグイン
+			$plugins['table'] = '//cdn.tinymce.com/4/plugins/table/plugin.min.js';
+			return $plugins;
 		});
 
 		$this->init();
@@ -20,53 +28,64 @@ class WPRD_Editor
 
 	private function init()
 	{
-		add_filter( 'mce_buttons', function($buttons) {
-
-			$order = [
-				'formatselect',
-				'styleselect', // new Styles
-				'link', 'unlink',
-				'wp_more',
-				'spellchecker',
-				'dfw',
-				'fullscreen',
-			];
-			return $order;
-		}, 1000 );
-
-		add_filter( 'mce_buttons_2', function($buttons) {
-			$order = [
-				'undo', 'redo',
-				'removeformat',
-				'pastetext',
-				'indent', 'outdent',
-				'alignleft', 'aligncenter', 'alignright',
-				'hr',
-				'charmap',
-			];
-
-			if ( ! wp_is_mobile() ) {
-				$order[] = 'wp_help';
-			}
-			return $order;
-		}, 1000 );
-
 		add_filter( 'tiny_mce_before_init', function($init) {
+			$init['toolbar1'] = 'spellchecker,formatselect,bold,italic,underline,strikethrough,superscript,subscript,serif,link,unlink,table,fullscreen';
+			$init['toolbar2'] = 'removeformat,undo,redo,blockquote,cite,attention,del,ins,indent,outdent,alignleft,aligncenter,alignright,hr';
+			$init['toolbar3'] = 'pre,wp_code,wp_more,wp_page,charmap,pastetext,wp_help';
+
+			$init['block_formats'] = "段落=p; 見出し2=h2; 見出し3=h3; 見出し4=h4; 見出し5=h5;";
 			return $init;
 		});
 
 		add_filter( 'quicktags_settings', function($tags) {
-			//string(61) "strong,em,link,block,del,ins,img,ul,ol,li,code,more,close,dfw"
-			// $buttons = [];
-			// $tags['buttons'] = implode(',', $buttons);
-			$tags['buttons'] = 'close,link,more,dwf';
-
+			//"strong,em,link,block,del,ins,img,ul,ol,li,code,more,close,dfw"
+			$tags['buttons'] = 'close,link,more,dfw';
 			return $tags;
 		});
 
 	}
 
 }
+//
+// access+() <Shift+Alt+()>
+//
+// meta+() <Ctrl+()>
+//
+// "{
+// 	"Heading 1":"access1",
+// 	"Heading 2":"access2",
+// 	"Heading 3":"access3",
+// 	"Heading 4":"access4",
+// 	"Heading 5":"access5",
+// 	"Heading 6":"access6",
+// 	"Paragraph":"access7",
+// 	"Blockquote":"accessQ",
+// 	"Underline":"metaU",
+// 	"Strikethrough":"accessD",
+// 	"Bold":"metaB",
+// 	"Italic":"metaI",
+// 	"Code":"accessX",
+// 	"Align center":"accessC",
+// 	"Align right":"accessR",
+// 	"Align left":"accessL",
+// 	"Justify":"accessJ",
+// 	"Cut":"metaX",
+// 	"Copy":"metaC",
+// 	"Paste":"metaV",
+// 	"Select all":"metaA",
+// 	"Undo":"metaZ",
+// 	"Redo":"metaY",
+// 	"Bullet list":"accessU",
+// 	"Numbered list":"accessO",
+// 	"Insert\/edit image":"accessM",
+// 	"Insert\/edit link":"metaK",
+// 	"Remove link":"accessS",
+// 	"Toolbar Toggle":"accessZ",
+// 	"Insert Read More tag":"accessT",
+// 	"Insert Page Break tag":"accessP",
+// 	"Distraction-free writing mode":"accessW",
+// 	"Keyboard Shortcuts":"accessH"
+// }"
 
 //
 // array(15) {

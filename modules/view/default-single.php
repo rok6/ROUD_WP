@@ -26,3 +26,5 @@
 			</div>
 		</div>
 	</article>
+
+	<?=Helper::page_links()?>

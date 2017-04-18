@@ -4,7 +4,7 @@
  *	Initialize
  *=====================================================*/
 // 初期設定を一括で変更したい場合に利用して下さい。
-// true にして管理画面に入ると下記初期設定の内容に強制的に書き換えます。
+// true にして管理画面に入ると下記「初期設定」以下の内容に強制的に書き換えます。
 // true のままだと管理画面内では該当箇所の設定を変更できません。
 // 変更後は必ず false に直して下さい。
 $enable_default_options = false;
@@ -14,6 +14,11 @@ $enable_default_options = false;
 add_theme_support('post-thumbnails', ['post',]);
 //画像のサイズ規格を追加
 add_image_size('featured-image', 2000, 1500, true);
+
+//Editor CSS へのパス
+add_editor_style( '/assets/css/editor-style.css' );
+//管理画面用CSSの追加
+$wprd->add_admin_style('/assets/css/admin-style.css');
 
 
 /**=====================================================
