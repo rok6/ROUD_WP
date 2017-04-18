@@ -1,7 +1,5 @@
 
-	<div class="breadcrumb">
-		<?=Helper::breadcrumb()?>
-	</div>
+	<?=Helper::breadcrumb()?>
 
 	<article class="single container">
 		<div class="hentry">

@@ -1,7 +1,5 @@
 
-	<div class="breadcrumb">
-		<?=Helper::breadcrumb()?>
-	</div>
+	<?=Helper::breadcrumb()?>
 
 	<div class="recent-post post-list container">
 		<div class="headding">

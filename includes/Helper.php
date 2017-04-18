@@ -93,7 +93,11 @@ class Helper
 	{
 		$label = '';
 
-		if( is_search() ) {
+		if( is_404() ) {
+			$label = '404';
+		}
+
+		else if( is_search() ) {
 			$label = get_search_query();
 		}
 
@@ -105,12 +109,16 @@ class Helper
 			$label = get_queried_object()->post_title;
 		}
 
-		else {
-			$label = get_post_type_object( get_post_type() )->label;
+		else if( is_single() ) {
+			$label = get_the_title();
 		}
 
-		if( is_category() || is_tag() || is_tax() ) {
+		else if( is_category() || is_tag() || is_tax() ) {
 			$label = get_queried_object()->slug;
+		}
+
+		else {
+			$label = get_post_type_object( get_post_type() )->label;
 		}
 
 		return esc_html($label);
@@ -122,7 +130,58 @@ class Helper
 	 *=====================================================*/
 	static public function breadcrumb()
 	{
-		$home_url = home_url();
+		if( is_front_page() ) {
+			return;
+		}
+
+		$list = [];
+		$content = 1;
+
+		$list += [
+			'<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">',
+			[
+				'<a href="' . home_url() . '" itemprop="item"><span itemprop="name">ホーム</span></a>',
+				'<meta itemprop="position" content="'. $content .'" />',
+			],
+			'</li>'
+		];
+
+
+		if( is_home() || is_archive() || is_404() ) {
+			$content++;
+			$list += [
+				'<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">',
+				[
+					'<span itemprop="name">'. self::headline() .'</span>',
+					'<meta itemprop="position" content="'. $content .'" />',
+				],
+				'</li>'
+			];
+		}
+
+		if( is_search() ) {
+			$list[] = '<li>"'. self::headline() .'" の検索結果</li>';
+		}
+
+		if( is_tax() || is_single() ) {
+			$post_type = get_post_type();
+			$list[] = sprintf(
+				'<li><a href="%1$s" itemprop="url"><span itemprop="title">%2$s</span></a></li>',
+				esc_url(get_post_type_archive_link($post_type)),
+				esc_html(get_post_type_object($post_type)->label)
+			);
+			$list[] = '<li>'. self::headline() .'</li>';
+		}
+
+		return self::_render([
+			'<div class="breadcrumb" itemscope itemtype=”http://schema.org/BreadcrumbList”>',
+			[
+				'<ul class="bread" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">',
+				$list,
+				'</ul>',
+			],
+			'</div>',
+		], 2);
 	}
 
 	/**
@@ -347,14 +406,19 @@ class Helper
 	public static function _render( array $array_elements = [], $indent = 0 )
 	{
 		$element = '';
+		$nl = false;
 		foreach( $array_elements as $value ) {
 			if( is_array($value) ) {
 				$element .= self::_render($value, $indent + 1);
 				continue;
 			}
+			if( !$nl ) {
+				$nl = true;
+				$element .= PHP_EOL;
+			}
 			$element .= str_repeat( "\t", $indent ) . $value . PHP_EOL;
 		}
-		return PHP_EOL . $element;
+		return $element . PHP_EOL;
 	}
 
 }

@@ -20,6 +20,12 @@ add_editor_style( '/assets/css/editor-style.css' );
 //管理画面用CSSの追加
 $wprd->add_admin_style('/assets/css/admin-style.css');
 
+add_filter('post_type_labels_post', function($labels) {
+	$labels->name = 'WEBLOG';
+	$labels->singular_name = 'WEBLOG';
+
+	return $labels;
+});
 
 /**=====================================================
  *	初期設定

@@ -24,7 +24,7 @@ class WPRD
 		add_filter('wp_mail_from', function() {
 			return 'wordpress@example.com';
 		});
-		
+
 		new WPRD_Organize( self::$domain );
 		new WPRD_Navigation( self::$domain );
 		new WPRD_CMB2( self::$domain );
@@ -33,6 +33,7 @@ class WPRD
 
 		$this->custom_post = new WPRD_CustomPost( self::$domain );
 		$this->custom_post->add(['news', 'wordpress']);
+		
 	}
 
 	/**

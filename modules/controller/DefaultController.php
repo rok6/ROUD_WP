@@ -22,8 +22,6 @@ class DefaultController extends Controller
 	 */
 	private function get_post_type()
 	{
-		global $wp_query;
-
 		if( is_archive() ) {
 
 			if( is_tax() || is_tag() ) {

@@ -24,9 +24,11 @@ class Controller
 	*=====================================================*/
 	protected function set( $name )
 	{
-		$this->$name = request_module( 'model', false, array(
+		$name = ( (string)$name !== '' ) ? $name : 'default';
+
+		$this->$name = request_module( 'model', false, [
 			'filename'	=> $name,
-		));
+		]);
 
 		$this->post_type = $name;
 
@@ -46,7 +48,7 @@ class Controller
 
 		if( is_file( $file = $module_path . $filename . '.php' )
 						||
-				( $render_type !== '' && is_file( $file = $module_path . $this->params['post_type'] . '.php' ) )
+				( $render_type !== '' && is_file( $file = $module_path . $this->post_type . '.php' ) )
 						||
 				( $render_type !== '' && is_file( $file = $module_path . 'default-' . $render_type . '.php' ) )
 						||

@@ -1,7 +1,5 @@
 
-	<div class="breadcrumb">
-		<?=Helper::breadcrumb()?>
-	</div>
+	<?=Helper::breadcrumb()?>
 
 	<div class="search-result post-list container">
 			<div class="headding">
@@ -13,17 +11,10 @@
 				<div class="hentry">
 					<header class="entry-header">
 						<div class="entry-title"><?=Helper::title($data->ID, 3, true)?></div>
-						<div class="post-thumbnail"><?=Helper::thumbnail($data->ID, array(
-							'url' => get_permalink($data->ID),
-							'alt' => $data->post_title,
-							))?></div>
 					</header>
 					<footer class="entry-footer">
 						<div class="entry-date">
 							<?=Helper::datetime($data->ID)?>
-						</div>
-						<div class="post-author">
-							<?=Helper::author($data->post_author)?>
 						</div>
 						<div class="post-tags">
 							<?=Helper::tags($data->ID)?>
@@ -35,4 +26,4 @@
 		</ul>
 	</div>
 
-	<?=Helper::paginations()?>
+	<?=Helper::post_paginations()?>
