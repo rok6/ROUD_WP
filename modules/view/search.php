@@ -1,6 +1,4 @@
 
-	<?=Helper::breadcrumb()?>
-
 	<div class="search-result post-list container">
 			<div class="headding">
 				<h2>"<?=Helper::headline()?>" の検索結果<span class="result_count"><?=$found_posts?>件</span></h2>

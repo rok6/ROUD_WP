@@ -11,6 +11,12 @@ class Controller
 	 * render
 	 *=====================================================*/
 	protected function render( $render_type = '' ) {
+		
+		global $wp_query;
+		/* 投稿件数が0の時 */
+		if( !$wp_query->found_posts ) {
+			$render_type = 'none';
+		}
 
 		if( $file = $this->valid_views( $render_type ) ) {
 			extract($this->view_vars);

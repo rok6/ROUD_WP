@@ -50,15 +50,9 @@ function request_module( $module_type, $render_type, array $args = array() )
 }
 
 
-
- /**
-	* Utls
-	*=====================================================*/
-function pascalize( $str, $d = '._ -' )
-{
-	return preg_replace("/[$d]/", '', ucwords(strtolower($str), $d) );
-}
-
+/**
+ * SET
+ *=====================================================*/
 
 function set_option( $key, $value, $add = false )
 {
@@ -70,12 +64,23 @@ function set_option( $key, $value, $add = false )
 	}
 }
 
+/**
+ * GET
+ *=====================================================*/
+
+
+/**
+ * Utls
+ *=====================================================*/
+function pascalize( $str, $d = '._ -' )
+{
+	return preg_replace("/[$d]/", '', ucwords(strtolower($str), $d) );
+}
 
 function h( $str )
 {
 	return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
 }
-
 
 function _dump($str){
 	echo '<pre>';

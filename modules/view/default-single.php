@@ -1,6 +1,4 @@
 
-	<?=Helper::breadcrumb()?>
-
 	<article class="single container">
 		<div class="hentry">
 			<header class="entry-header">

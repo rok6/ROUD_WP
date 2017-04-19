@@ -13,7 +13,7 @@ class WPRD_Organize
 
 	private function default_init()
 	{
-		$this->deregister_category_taxonomies();
+		//$this->deregister_category_taxonomies();
 		//$this->deregister_tag_taxonomies();
 
 		if( is_admin() ) {
@@ -22,7 +22,7 @@ class WPRD_Organize
 			$this->auto_post_slug();
 		}
 		else {
-			$this->deregister_jquery();
+			//$this->deregister_jquery();
 			$this->clean_wp_head([
 				'wp_generator',
 				'wp_shortlink_wp_head',

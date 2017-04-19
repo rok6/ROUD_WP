@@ -1,6 +1,10 @@
 </div><!--#wrapper-->
 
 <footer id="footer">
+	<div class="sitemap">
+		<div class="container">
+		</div>
+	</div>
 	<div class="copyright">&copy; <?=esc_html( get_bloginfo('name') )?>.</div>
 </footer>
 

@@ -38,8 +38,12 @@ class WPRD_CustomPost
 			'hierarchical'	=> true,
 			'show_in_rest'	=> true,
 			'show_admin_column'	=> true,
+			'rewrite'	=> [
+				'slug'	=> 'news/category'
+			]
 		];
 		register_taxonomy('news_cat', 'news', $tax_args);
+		add_rewrite_rule('news/category/([^/]+)/?$', 'index.php?news_cat=$matches[1]', 'top');
 	}
 
 	private function wordpress()

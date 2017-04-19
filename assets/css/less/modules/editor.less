@@ -101,20 +101,6 @@ ul, ol {
 	}
 }
 
-/** -	order	- **/
-ol {
-	counter-reset: OrderList;
-
-	li {
-
-	}
-	li::before {
-		counter-increment: OrderList;
-		content: counter(OrderList) '.';
-		margin-right: 0.5em;
-	}
-}
-
 /** -	unorder	- **/
 ul {
 

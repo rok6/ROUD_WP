@@ -26,14 +26,18 @@ class WPRD
 		});
 
 		new WPRD_Organize( self::$domain );
-		new WPRD_Navigation( self::$domain );
 		new WPRD_CMB2( self::$domain );
 		new WPRD_Editor( self::$domain );
 		new WPRD_Options( self::$domain );
+		
+		new WPRD_Navigation( self::$domain, [
+			'primary'		=> __('メインメニュー', self::$domain),
+			'social'		=> __('ソーシャル', self::$domain),
+		]);
 
 		$this->custom_post = new WPRD_CustomPost( self::$domain );
 		$this->custom_post->add(['news', 'wordpress']);
-		
+
 	}
 
 	/**

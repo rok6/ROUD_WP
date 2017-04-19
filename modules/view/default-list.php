@@ -1,6 +1,4 @@
 
-	<?=Helper::breadcrumb()?>
-
 	<div class="recent-post post-list container">
 		<div class="headding">
 			<h2><?=Helper::headline()?></h2>

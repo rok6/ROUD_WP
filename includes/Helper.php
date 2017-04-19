@@ -93,7 +93,11 @@ class Helper
 	{
 		$label = '';
 
-		if( is_404() ) {
+		if( is_front_page() ) {
+			$label = __('What\'s new');
+		}
+
+		else if( is_404() ) {
 			$label = '404';
 		}
 
@@ -101,24 +105,20 @@ class Helper
 			$label = get_search_query();
 		}
 
-		else if( is_front_page() ) {
-			$label = __('What\'s new');
-		}
-
-		else if( is_home() ) {
-			$label = get_queried_object()->post_title;
-		}
-
-		else if( is_single() ) {
-			$label = get_the_title();
-		}
-
-		else if( is_category() || is_tag() || is_tax() ) {
-			$label = get_queried_object()->slug;
-		}
-
 		else {
-			$label = get_post_type_object( get_post_type() )->label;
+
+			if( is_home() || is_single() ){
+				$label = get_queried_object()->post_title;
+			}
+
+			else if( is_category() || is_tag() || is_tax() ) {
+				$label = get_queried_object()->slug;
+			}
+
+			else {
+				$label = get_queried_object()->label;
+			}
+
 		}
 
 		return esc_html($label);
@@ -134,54 +134,145 @@ class Helper
 			return;
 		}
 
-		$list = [];
-		$content = 1;
+		$content = 0;
 
-		$list += [
+		$list = [
 			'<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">',
 			[
 				'<a href="' . home_url() . '" itemprop="item"><span itemprop="name">ホーム</span></a>',
-				'<meta itemprop="position" content="'. $content .'" />',
+				'<meta itemprop="position" content="'. ++$content .'" />',
 			],
 			'</li>'
 		];
 
+		if( is_search() ) {
+			$list = array_merge($list, [
+				'<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">',
+				[
+					'<span itemprop="name">"'. self::headline() .'" の検索結果</span>',
+					'<meta itemprop="position" content="'. ++$content .'" />',
+				],
+				'</li>'
+			]);
+		}
+		else {
 
-		if( is_home() || is_archive() || is_404() ) {
-			$content++;
-			$list += [
+			$queried = get_queried_object();
+
+			if( is_category() || is_tag() || is_tax() || is_single() ) {
+
+				$post_type = ( is_single() ) ?
+					$post_type = $queried->post_type
+				: get_taxonomy($queried->taxonomy)->object_type[0];
+
+				$anchor = sprintf(
+					'<a href="%1$s" itemprop="item"><span itemprop="name">%2$s</span></a>',
+					esc_url(get_post_type_archive_link($post_type)),
+					esc_html(get_post_type_object($post_type)->label)
+				);
+				$list = array_merge($list, [
+					'<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">',
+					[
+						$anchor,
+						'<meta itemprop="position" content="'. ++$content .'" />',
+					],
+					'</li>'
+				]);
+			}
+
+			$list = array_merge($list, [
 				'<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">',
 				[
 					'<span itemprop="name">'. self::headline() .'</span>',
-					'<meta itemprop="position" content="'. $content .'" />',
+					'<meta itemprop="position" content="'. ++$content .'" />',
 				],
 				'</li>'
-			];
-		}
+			]);
 
-		if( is_search() ) {
-			$list[] = '<li>"'. self::headline() .'" の検索結果</li>';
-		}
-
-		if( is_tax() || is_single() ) {
-			$post_type = get_post_type();
-			$list[] = sprintf(
-				'<li><a href="%1$s" itemprop="url"><span itemprop="title">%2$s</span></a></li>',
-				esc_url(get_post_type_archive_link($post_type)),
-				esc_html(get_post_type_object($post_type)->label)
-			);
-			$list[] = '<li>'. self::headline() .'</li>';
 		}
 
 		return self::_render([
-			'<div class="breadcrumb" itemscope itemtype=”http://schema.org/BreadcrumbList”>',
-			[
-				'<ul class="bread" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">',
-				$list,
-				'</ul>',
-			],
-			'</div>',
+			'<ol class="container">',
+			$list,
+			'</ol>',
 		], 2);
+	}
+
+	/**
+	 * navigation
+	 *=====================================================*/
+	static public function navgation_menu( array $args = [] )
+	{
+		$default = [
+			'menu'			=> 'main_menu',
+			'location'	=> 'primary',
+		];
+		$args += $default;
+
+		if( ($locations = get_nav_menu_locations()) && isset($locations[$args['location']]) ) {
+			$menu = wp_get_nav_menu_object( $locations[$args['location']] );
+			$navs = wp_get_nav_menu_items( $menu->term_id );
+
+			$menus = [];
+			$menu_id = null;
+
+			foreach( $navs as $nav ) {
+				$m = [];
+				$m['ID']					= $nav->ID;
+				$m['title']				= $nav->title;
+				$m['attr_title'] 	= $nav->attr_title;
+				$m['description']	= $nav->description;
+				$m['url']					= $nav->url;
+				$m['target']			= $nav->target;
+				$m['classes']			= array_values(array_diff($nav->classes, ['']));
+				$m['parent_id'] = (int)$nav->menu_item_parent;
+				$m['has_parent'] = ( !$m['parent_id'] ) ? false : true;
+
+				$menus[] = $m;
+			}
+
+
+			$html = self::_nav_walker($menus);
+			_dump($html);
+
+			return;
+
+			return self::_render([
+				$html
+			], 2);
+		}
+	}
+
+	static private function _nav_walker( $menus, $parent_id = 0 ) {
+
+		$html = ['<ul>'];
+		$li = 'list';
+
+		foreach( $menus as $m ) {
+
+			$id = $m['ID'];
+
+			if( array_key_exists($m['parent_id'], $html[$li]) ) {
+				
+			}
+			else {
+
+				$title	= $m['title'];
+				$attrs = sprintf(' href="%1$s"', esc_url($m['url']));
+				$attrs .= ( !empty($m['target']) ) ? sprintf(' target="%1$s"', esc_attr($m['target'])) : '';
+				$attrs .= ( !empty($m['classes']) ) ? sprintf(' class="%1$s"', esc_attr(implode(' ', $m['classes']))) : '';
+
+				$html[$li][$id] = sprintf('<li><a%2$s>%1$s</a></li>',
+					esc_html($title),
+					$attrs
+				);
+			}
+
+		}
+
+		$html[] = '</ul>';
+
+		return $html;
 	}
 
 	/**
@@ -273,26 +364,29 @@ class Helper
 	}
 
 	/**
-	 * tags
+	 * tas
 	 *=====================================================*/
 	static public function tags( $id )
 	{
-		$elm = '';
 		$taxonomies = get_object_taxonomies(get_post_type());
 		$tags				= wp_get_object_terms($id, $taxonomies);
+
+		$elm = '';
 
 		if( !empty($tags) && !is_wp_error($tags) ) {
 
 			foreach( $tags as $tag ) {
+				//_dump(get_taxonomy($tag->taxonomy)->label);
 				$elm .= sprintf('<a href="%2$s" class="tag">%1$s</a>',
 					esc_html( $tag->name ),
 					esc_url( get_tag_link($tag->term_id) )
 				);
+
 			}
 
 		}
 		else {
-			$elm .= '<span class="no-tag">-</span>';
+			$elm = '<span class="no-tag">-</span>';
 		}
 
 		return $elm . PHP_EOL;
@@ -331,6 +425,7 @@ class Helper
 
 		return self::_pager( $max, $current, $range, 'page-links' );
 	}
+
 
 	private static function _pager( $max, $current, $range = 2, $class = '' )
 	{
@@ -403,6 +498,9 @@ class Helper
 		return esc_url($page_link);
 	}
 
+	/**
+	 * Helper render
+	 *=====================================================*/
 	public static function _render( array $array_elements = [], $indent = 0 )
 	{
 		$element = '';

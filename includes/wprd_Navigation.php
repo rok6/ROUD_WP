@@ -4,18 +4,12 @@ class WPRD_Navigation
 {
 	static private $domain;
 
-	public function __construct( $domain )
+	public function __construct( $domain, array $menus )
 	{
 		self::$domain = $domain;
 
-		/*	メニューの有効化	*/
-		add_theme_support( 'menus' );
-
 		/*	カスタムメニューの位置を登録	*/
-		register_nav_menus ( [
-			'primary'		=> __('メインメニュー', self::$domain),
-			'social'		=> __('ソーシャル', self::$domain),
-		]);
+		register_nav_menus ( $menus );
 
 		/*	管理画面のカスタムメニューの位置変更	*/
 		if( is_admin() ) {
@@ -68,7 +62,7 @@ class WPRD_Navigation
 }
 
 
-class Roud_Walker extends Walker_Nav_Menu
+class WPRD_Walker extends Walker_Nav_Menu
 {
 	function start_lvl( &$output, $depth = 0, $args = array() )
 	{

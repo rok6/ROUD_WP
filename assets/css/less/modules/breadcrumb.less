@@ -1,1 +1,17 @@
 // main: ../style.less
+
+.breadcrumb {
+	background: #333;
+	font-size: 0.85em;
+	color: #ddd;
+	a { color: #ddd; }
+	.container {
+		padding: 1.5em 2.5em;
+	}
+	ol {
+		li + li::before {
+			content: '>';
+			margin: 0 .5em;
+		}
+	}
+}
