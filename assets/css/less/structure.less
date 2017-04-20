@@ -82,6 +82,7 @@ body {
 }
 
 #main {
+	padding-bottom: 2.5em;
 	background: #f5f5f5;
 	&.single {
 		padding: 2.5em 0;
@@ -107,6 +108,167 @@ body {
 	}
 }
 
+
+/*=====================================================*
+ * List
+ *=====================================================*/
+.post-list {
+	ul {
+		padding-bottom: 2.5em;
+	}
+	.row {
+		position: relative;
+		padding: 0.5em 0;
+		margin-bottom: 5px;
+		text-align: center;
+		a {
+			font-size: 0.85em;
+		}
+	}
+	.entry-container {
+		position: relative;
+		padding: 0 2.5em;
+		//border-bottom: 1px solid #222;
+
+		.entry-header::before,
+		.entry-header::after,
+		.entry-footer::before,
+		.entry-footer::after {
+			position: absolute;
+			display: block;
+			content: '';
+			width: 0; height: 0;
+			background: #222;
+
+			transition-property: width, height, top, left;
+			transition-duration: 150ms;
+			transition-timing-function: ease-in;
+		}
+
+		.entry-header::before {
+			height: 1px;
+			top: 0; left: 50%;
+		}
+		.entry-header::after {
+			height: 1px;
+			bottom: 0; left: 50%;
+		}
+		.entry-footer::before {
+			width: 1px;
+			top: 50%; left: 0;
+		}
+		.entry-footer::after {
+			width: 1px;
+			top: 50%; right: 0;
+		}
+
+		&:hover {
+			background: #fff;
+			.entry-header::before,
+			.entry-header::after {
+				width: 100%;
+				left: 0;
+			}
+			.entry-footer::before,
+			.entry-footer::after {
+				height: 100%;
+				top: 0;
+			}
+		}
+	}
+	.entry-header {
+		margin-bottom: 0.5em;
+		a {
+			display: block;
+			padding: 1.25em 0 0.5em;
+			&:hover {
+				color: #555;
+			}
+		}
+	}
+	.entry-footer {
+		display: flex;
+		justify-content: center;
+		align-items: flex-end;
+	}
+}
+
+/*=====================================================*
+ * single entry
+ *=====================================================*/
+.single {
+	.entry-header {
+		text-align: center;
+	}
+	.entry-footer {
+		justify-content: center;
+	}
+}
+
+/*=====================================================*
+ * common entry
+ *=====================================================*/
+
+.entry-footer {
+	display: flex;
+	flex-wrap: wrap;
+	& > * {
+		padding-right: 1em;
+		margin-bottom: 1.5em;
+	}
+	.entry-date {
+		.elapsed-time {
+			display: inline-block;
+			margin-right: 1em;
+			padding: 0.1em 0.5em;
+			font-size: 0.8em;
+			border: 1px solid #ccc;
+		}
+		.published {
+			font-size: 0.9em;
+		}
+		.updated {
+			position: relative;
+			margin-right: 1em;
+			padding: 0.4em 1em;
+			color: #fff;
+			font-size: 0.75em;
+			background: #922;
+			border-radius: 0.5em;
+			&::after {
+				content: 'up!';
+				margin-left: 0.25em;
+			}
+			&::before {
+				content: '';
+				display: block;
+				position: absolute;
+				top: 0.5em; left: 100%;
+				width: 0; height: 0;
+				border: 0.5em solid transparent;
+				border-left-color: #922;
+			}
+		}
+	}
+	.post-taxonomies {
+		.name {
+			display: inline-block;
+			margin-right: 1em;
+			margin-left: 0.5em;
+			padding: 0.15em 0.5em 0;
+			font-size: 0.8em;
+			border: 1px solid #ccc;
+		}
+		.name:first-child {
+			margin-left: 0;
+		}
+		.term {
+			margin-right: 0.5em;
+		}
+	}
+}
+
+
 /*=====================================================*
  * Element
  *=====================================================*/
@@ -115,7 +277,7 @@ body {
 
 .headding {
 	text-align: center;
-	margin-bottom: 2.5em;
+	padding-bottom: 2.5em;
 	h1, h2 {
 		display: inline-block;
 		padding: 0.25em 1.5em;
@@ -128,37 +290,4 @@ body {
 	font-size: 1.25em;
 	text-align: center;
 	background: #fff;
-}
-
-/*=====================================================*
- * List
- *=====================================================*/
-.post-list {
-	.row {
-		margin-bottom: 2.5em;
-		padding: 0.5em 0;
-		border-bottom: 3px solid #222;
-		.hentry {
-			display: flex;
-		}
-	}
-	.row:hover {
-		border-color: #902020;
-		a {
-			color: #902020;
-		}
-	}
-	.entry-header {
-		flex-grow: 1;
-		h3 {
-			a {
-				display: block;
-			}
-		}
-	}
-	.entry-footer {
-		padding-left: 2.5em;
-		display: flex;
-		align-items: flex-end;
-	}
 }

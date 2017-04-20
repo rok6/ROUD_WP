@@ -10,25 +10,29 @@
 		flex-wrap: wrap;
 		padding: 0 2.5em;
 		li {
-			width: 50%;
+			width: 100%;
 			margin: .25em 0;
+			font-size: 1.5em;
 			text-align: center;
-			font-size: 1.25em;
 			font-weight: bold;
-			border-right: 1px solid #222;
+			padding-bottom: .25em;
+			border-bottom: 1px solid #222;
 			a {
 				text-decoration: none;
 			}
 		}
-		li:first-child {
-			padding-bottom: .25em;
-			width: 100%;
-			font-size: 1.5em;
-			border-right: none;
-			border-bottom: 1px solid #222;
+		li:nth-of-type(2),
+		li:nth-of-type(3) {
+			width: 50%;
+			font-size: 1.25em;
+			padding-bottom: 0;
+			border-bottom: none;
 		}
-		li:last-child {
-			border-right: none;
+		li:nth-of-type(2) {
+			border-right: 1px solid #222;
+		}
+		li:last-of-type {
+			border-bottom: none;
 		}
 	}
 }

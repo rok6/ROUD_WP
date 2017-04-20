@@ -10,11 +10,8 @@
 				<div class="entry-date">
 					<?=Helper::datetime($post->ID)?>
 				</div>
-				<div class="post-author">
-					<?=Helper::author($post->post_author)?>
-				</div>
-				<div class="post-tags">
-					<?=Helper::tags($post->ID)?>
+				<div class="post-taxonomies">
+					<?=Helper::taxonomies($post->ID)?>
 				</div>
 			</footer>
 			<div class="entry-content">

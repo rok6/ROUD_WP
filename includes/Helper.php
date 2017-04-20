@@ -311,12 +311,6 @@ class Helper
 			);
 		}
 
-		$entry_date .= sprintf(
-			'<time datetime="%1$s" class="published">%2$s</time>',
-			esc_attr($published_datetime),
-			esc_html($published)
-		);
-
 		if( $published !== $updated ) {
 			$entry_date .= sprintf(
 				'<time datetime="%1$s" class="updated">%2$s</time>',
@@ -324,6 +318,13 @@ class Helper
 				esc_html($updated)
 			);
 		}
+		
+		$entry_date .= sprintf(
+			'<time datetime="%1$s" class="published">%2$s</time>',
+			esc_attr($published_datetime),
+			esc_html($published)
+		);
+
 		return $entry_date . PHP_EOL;
 	}
 
@@ -341,30 +342,46 @@ class Helper
 	/**
 	 * tas
 	 *=====================================================*/
-	static public function tags( $id )
+	static public function taxonomies( $id )
 	{
-		$taxonomies = get_object_taxonomies(get_post_type());
-		$tags				= wp_get_object_terms($id, $taxonomies);
+		$taxonomy		= get_object_taxonomies(get_post_type());
+		$taxonomies	= wp_get_object_terms($id, $taxonomy);
 
-		$elm = '';
+		$terms = [];
 
-		if( !empty($tags) && !is_wp_error($tags) ) {
+		if( !empty($taxonomies) && !is_wp_error($taxonomies) ) {
 
-			foreach( $tags as $tag ) {
-				//_dump(get_taxonomy($tag->taxonomy)->label);
-				$elm .= sprintf('<a href="%2$s" class="tag">%1$s</a>',
-					esc_html( $tag->name ),
-					esc_url( get_tag_link($tag->term_id) )
+			$history = [];
+
+			foreach( $taxonomies as $term ) {
+
+				$tax = get_taxonomy($term->taxonomy);
+				$name = $tax->name;
+
+				if( !in_array($name, $history) ) {
+					$history[] = $name;
+					$terms[$name] = [];
+					array_unshift($terms[$name],
+						sprintf('<span class="name%2$s">%1$s</span>',
+							esc_html( $tax->label ),
+							esc_attr(' ' . $name)
+						)
+					);
+				}
+
+				$terms[$name][] = sprintf('<a href="%2$s" class="term">%1$s</a>',
+					esc_html( $term->name ),
+					esc_url( get_tag_link($term->term_id) )
 				);
 
 			}
 
 		}
 		else {
-			$elm = '<span class="no-tag">-</span>';
+			$terms[] = '<span class="no-taxonomy">-</span>';
 		}
 
-		return $elm . PHP_EOL;
+		return self::_render($terms, 6);
 	}
 
 	/**

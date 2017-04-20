@@ -20,6 +20,9 @@ class WPRD
 		//リダイレクト時の推測候補先への遷移を禁止
 		$this->remove_auto_redirect();
 
+		//デフォルトカテゴリーに「設定しない」を追加
+		$this->add_non_categorize();
+
 		// ローカルでのメール送信アクション用
 		add_filter('wp_mail_from', function() {
 			return 'wordpress@example.com';
@@ -29,7 +32,7 @@ class WPRD
 		new WPRD_CMB2( self::$domain );
 		new WPRD_Editor( self::$domain );
 		new WPRD_Options( self::$domain );
-		
+
 		new WPRD_Navigation( self::$domain, [
 			'primary'		=> __('メインメニュー', self::$domain),
 			'social'		=> __('ソーシャル', self::$domain),
@@ -43,6 +46,21 @@ class WPRD
 	/**
 	 * Methods
 	 *=====================================================*/
+
+	public function add_non_categorize()
+	{
+		add_filter('wp_dropdown_cats', function( $output, $r ) {
+			$regex = '#(<option(.)*</option>)#u';
+
+			if ( preg_match( $regex, $output ) ) {
+				$output = preg_split($regex, $output, 2);
+				$output[0] .= '<option class="level-0" value="-1">'.__('設定しない').'</option>';
+				$output = $output[0].$output[1];
+			}
+
+			return $output;
+		}, 10, 2);
+	}
 
 	public function add_supports()
 	{

@@ -1,6 +1,6 @@
 // main: ../style.less
 /*=====================================================*
- * microformat hentry
+ * post-common
  *=====================================================*/
 
 .wp-editor,
@@ -83,48 +83,4 @@
 		top: 0.15em; left: 0;
 	}
 
-}
-
-.entry-footer {
-	display: flex;
-	& > * {
-		padding-right: 1em;
-	}
-	.entry-date {
-		.elapsed-time {
-			display: inline-block;
-			margin-right: 1em;
-			padding: 0.1em 0.5em;
-			font-size: 0.8em;
-			border: 1px solid #ccc;
-		}
-		.published {
-			&::before {
-				content: 'on:';
-				margin-right: 0.5em;
-			}
-		}
-		.updated {
-			margin-left: 1em;
-			&::before {
-				content: 'up:';
-				margin-right: 0.5em;
-			}
-		}
-	}
-	.post-author {
-		&::before {
-			content: 'author:';
-			margin-right: 0.5em;
-		}
-	}
-	.post-tags {
-		&::before {
-			content: 'tags:';
-			margin-right: 0.5em;
-		}
-		.tag {
-			margin-right: 0.5em;
-		}
-	}
 }
