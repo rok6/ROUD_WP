@@ -83,7 +83,7 @@ function h( $str )
 }
 
 function _dump($str){
-	echo '<pre>';
+	echo PHP_EOL,'<pre>';
 	var_dump($str);
-	echo '</pre>' . PHP_EOL;
+	echo '</pre>',PHP_EOL;
 }

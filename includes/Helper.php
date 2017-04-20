@@ -204,76 +204,51 @@ class Helper
 	static public function navgation_menu( array $args = [] )
 	{
 		$default = [
-			'menu'			=> 'main_menu',
-			'location'	=> 'primary',
+			'menu'			=> '',
+			'location'	=> '',
 		];
 		$args += $default;
 
 		if( ($locations = get_nav_menu_locations()) && isset($locations[$args['location']]) ) {
 			$menu = wp_get_nav_menu_object( $locations[$args['location']] );
-			$navs = wp_get_nav_menu_items( $menu->term_id );
-
-			$menus = [];
-			$menu_id = null;
-
-			foreach( $navs as $nav ) {
-				$m = [];
-				$m['ID']					= $nav->ID;
-				$m['title']				= $nav->title;
-				$m['attr_title'] 	= $nav->attr_title;
-				$m['description']	= $nav->description;
-				$m['url']					= $nav->url;
-				$m['target']			= $nav->target;
-				$m['classes']			= array_values(array_diff($nav->classes, ['']));
-				$m['parent_id'] = (int)$nav->menu_item_parent;
-				$m['has_parent'] = ( !$m['parent_id'] ) ? false : true;
-
-				$menus[] = $m;
-			}
-
-
-			$html = self::_nav_walker($menus);
-			_dump($html);
-
-			return;
-
-			return self::_render([
-				$html
-			], 2);
+			$menu_id = $menu->term_id;
 		}
-	}
-
-	static private function _nav_walker( $menus, $parent_id = 0 ) {
-
-		$html = ['<ul>'];
-		$li = 'list';
-
-		foreach( $menus as $m ) {
-
-			$id = $m['ID'];
-
-			if( array_key_exists($m['parent_id'], $html[$li]) ) {
-				
-			}
-			else {
-
-				$title	= $m['title'];
-				$attrs = sprintf(' href="%1$s"', esc_url($m['url']));
-				$attrs .= ( !empty($m['target']) ) ? sprintf(' target="%1$s"', esc_attr($m['target'])) : '';
-				$attrs .= ( !empty($m['classes']) ) ? sprintf(' class="%1$s"', esc_attr(implode(' ', $m['classes']))) : '';
-
-				$html[$li][$id] = sprintf('<li><a%2$s>%1$s</a></li>',
-					esc_html($title),
-					$attrs
-				);
-			}
-
+		else {
+			$menu_id = $args['menu'];
 		}
 
-		$html[] = '</ul>';
+		if( !$navs = wp_get_nav_menu_items( $menu_id ) ) {
+			return false;
+		}
 
-		return $html;
+		$menus = [];
+
+		foreach( $navs as $nav ) {
+			$m = [];
+			$m['ID']					= $nav->ID;
+			$m['title']				= $nav->title;
+			$m['attr_title'] 	= $nav->attr_title;
+			$m['description']	= $nav->description;
+			$m['url']					= $nav->url;
+			$m['target']			= $nav->target;
+			$m['xfn']					= $nav->xfn;
+			$m['classes']			= array_values(array_diff($nav->classes, ['']));
+			$m['parent_id'] = (int)$nav->menu_item_parent;
+			$m['has_parent'] = ( !$m['parent_id'] ) ? false : true;
+
+			$menus[] = $m;
+		}
+
+		$walker = new WPRD_Walker( $menus, 4 );
+
+		return self::_render([
+			'<ul>',
+			$walker->get_element(),
+			'</ul>',
+		], 3);
+
 	}
+
 
 	/**
 	 * title

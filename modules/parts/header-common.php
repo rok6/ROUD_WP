@@ -21,11 +21,7 @@
 			<?=Helper::logo(true)?>
 		</div>
 		<nav class="nav-container h-items">
-			<ul>
-				<li><a href="<?=home_url()?>/weblog/">WEBLOG</a></li>
-				<li><a href="<?=home_url()?>/news/">NEWS</a></li>
-				<li><a href="<?=home_url()?>/wordpress/">WordPress</a></li>
-			</ul>
+			<?=Helper::navgation_menu(['location' => 'primary'])?>
 		</nav>
 		<div class="search h-items">
 			<?php get_search_form(); ?>

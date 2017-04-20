@@ -20,7 +20,7 @@
 			<?=Helper::logo(true)?>
 		</div>
 		<nav class="nav-container h-items">
-			<?=Helper::navgation_menu()?>
+			<?=Helper::navgation_menu(['location' => 'primary'])?>
 		</nav>
 		<div class="search h-items">
 			<?php get_search_form(); ?>

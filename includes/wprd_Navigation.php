@@ -62,59 +62,117 @@ class WPRD_Navigation
 }
 
 
-class WPRD_Walker extends Walker_Nav_Menu
+class WPRD_Walker
 {
-	function start_lvl( &$output, $depth = 0, $args = array() )
-	{
-		$output .= "</li>" . PHP_EOL;
-		$output .= $this->indent($args->indent, $depth) . "<li>" . PHP_EOL;
-		$output .= $this->indent($args->indent, $depth + 1) . "<ul class=\"nav-children\">";
-	}
+	protected $output = '';
+	protected $history = [];
+	protected $prev_depth = 0;
 
-	function end_lvl( &$output, $depth = 0, $args = array() )
+	function __construct( $menus, $indent = 0 )
 	{
-		$output .= PHP_EOL . $this->indent($args->indent, $depth + 1) . "</ul>" . PHP_EOL;
-	}
 
-	function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 )
-	{
-		if( $item->menu_item_parent ) {
-			$depth++;
+		$this->indent = $indent;
+
+		foreach( $menus as $item ) {
+
+			$depth = $this->get_child_depth($this->history, $item);
+
+			//前回が子だった場合リストを閉じる
+			if( $depth < $this->prev_depth ) {
+				$this->end_lvl($this->output, $item, ($this->prev_depth-1)*2);
+			}
+
+			if( !$depth ) {
+				//一番上の親だった場合
+				$this->start_el($this->output, $item, $depth);
+			}
+			else {
+				//子の場合
+
+				//子のさらに子だった場合
+				if( $depth > $this->prev_depth ) {
+					$this->start_lvl($this->output, $item, ($depth-1)*2);
+				}
+
+				$this->start_el($this->output, $item, $depth*2);
+			}
+
+			//リストを閉じる
+			$this->end_el($this->output, $item, $depth);
+
+			//前回の深度を更新
+			$this->prev_depth = $depth;
+			//親リストの登録
+			array_unshift($this->history, $item['ID']);
 		}
-		$output .= PHP_EOL . $this->indent($args->indent, $depth) . "<li>";
-		$output .= $this->builder($item, $depth, $args);
+
 	}
 
-	function end_el( &$output, $item, $depth = 0, $args = array() )
+	protected function start_el(&$output, $item, $depth)
 	{
-		if( in_array('menu-item-has-children', $item->classes) ) {
-			$output .= $this->indent($args->indent, $depth);
+		$output .= PHP_EOL.$this->indent($depth).'<li>';
+		$output .= $this->anchor($item);
+	}
+
+	protected function end_el(&$output, $item, $depth)
+	{
+		$output .= '</li>';
+	}
+
+	protected function start_lvl(&$output, $item, $depth)
+	{
+		$output .= PHP_EOL.$this->indent($depth).'<li>';
+		$output .= PHP_EOL.$this->indent($depth+1).'<ul>';
+	}
+
+	protected function end_lvl(&$output, $item, $depth)
+	{
+		$output .= PHP_EOL.$this->indent($depth+1).'</ul>';
+		$output .= PHP_EOL.$this->indent($depth).'</li>';
+	}
+
+
+	public function get_element()
+	{
+		return $this->output.PHP_EOL;
+	}
+
+
+	protected function get_child_depth(&$history, $item)
+	{
+		if( current($history) !== $item['parent_id'] ) {
+
+			if( in_array($item['parent_id'], $history) ) {
+				array_shift($history);
+				return $this->get_child_depth($history, $item);
+			}
+
+			$history = [];
+			return 0;
 		}
-		$output .= "</li>";
+		else {
+			return count($history);
+		}
 	}
 
-	private function indent( $indent, $depth )
+	protected function anchor($item)
 	{
-		$indent = $indent + $depth + 2;
-		return str_repeat( "\t",	$indent );
-	}
+		$title	= esc_html($item['title']);
+		$attrs	= sprintf( ' href="%1$s"', esc_url($item['url']) );
+		$attrs .= !empty($item['target'])	? sprintf( ' target="%1$s"',	esc_attr($item['target']) )								: '';
+		$attrs .= !empty($item['classes'])	? sprintf( ' class="%1$s"',		esc_attr(implode(' ', $item['classes'])) )	: '';
+		$attrs .= !empty($item['attr_title'])	? sprintf( ' title="%1$s"',		esc_attr(implode(' ', $item['classes'])) )	: '';
+		$attrs .= !empty($item['xfn'])					? sprintf( ' rel="%1$s"',			esc_attr(implode(' ', $item['classes'])) )	: '';
 
-	private function builder( $item, $depth, $args)
-	{
-		// link attributes
-		$attributes	= ! empty( $item->attr_title )	? ' title="'	. esc_attr( $item->attr_title )	 .'"' : '';
-		$attributes .= ! empty( $item->target )			? ' target="'	. esc_attr( $item->target )			 .'"' : '';
-		$attributes .= ! empty( $item->xfn )				? ' rel="'		. esc_attr( $item->xfn )				 .'"' : '';
-		$attributes .= ! empty( $item->url )				? ' href="'		. esc_attr( $item->url )				 .'"' : '';
-
-		$item_output = sprintf( '%1$s<a%2$s>%3$s%4$s%5$s</a>%6$s',
-			$args->before,
-			$attributes,
-			$args->link_before,
-			apply_filters( 'the_title', $item->title, $item->ID ),
-			$args->link_after,
-			$args->after
+		return sprintf('<a%2$s>%1$s</a>',
+			$title,
+			$attrs
 		);
-		return apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
 	}
+
+	protected function indent($depth)
+	{
+		return str_repeat( "\t",	$this->indent + $depth );
+	}
+
 }
