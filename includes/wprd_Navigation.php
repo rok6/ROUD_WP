@@ -16,93 +16,56 @@ class WPRD_Navigation
 			$this->reorder_custom_nav_menu();
 		}
 
-		$this->recreate_nav_menu();
-
-	}
-
-	private function recreate_nav_menu()
-	{
-		/*	カスタムメニューの整形	*/
-		add_filter('wp_nav_menu_args', function( array $args ) {
-			$args['indent'] = isset($args['indent']) ? $args['indent'] + 1 : 0;
-			$indent = str_repeat( "\t", $args['indent'] + 1 );
-
-			$args['items_wrap']	= '';
-			$args['items_wrap'] .= PHP_EOL . $indent . '<ul>';
-			$args['items_wrap'] .= '%3$s';
-			$args['items_wrap'] .= PHP_EOL . $indent .'</ul>';
-
-			$indent = str_repeat( "\t", $args['indent'] );
-			$args['items_wrap'] .= PHP_EOL . $indent;
-
-			return $args;
-		});
-		add_filter('wp_nav_menu', function( $wp_nav_menu ) {
-			return $wp_nav_menu . PHP_EOL;
-		});
 	}
 
 	//外観サブメニュー内のメニュー項目を外部に出す
 	private function reorder_custom_nav_menu()
 	{
-		add_action('admin_menu', function(){
+		add_action('admin_menu', function() {
 			remove_submenu_page('themes.php', 'nav-menus.php');
-			add_menu_page(
-				__( 'メニュー', self::$domain ),
-				__( 'メニュー', self::$domain ),
-				'edit_theme_options',
-				'nav-menus.php',
-				'',
-				null,
-				5
-			);
+			add_menu_page( __('メニュー', self::$domain), __('メニュー', self::$domain), 'edit_theme_options', 'nav-menus.php', '', null, 5 );
 		});
 	}
 
 }
 
 
+/**
+ * WPRD_Walker
+ **/
 class WPRD_Walker
 {
-	protected $output = '';
-	protected $history = [];
-	protected $prev_depth = 0;
-
 	function __construct( $menus, $indent = 0 )
 	{
-
 		$this->indent = $indent;
+		$this->history = [];
+		$this->output = '';
+		$this->prev_depth = '';
+
 
 		foreach( $menus as $item ) {
-
 			$depth = $this->get_child_depth($this->history, $item);
-
-			//前回が子だった場合リストを閉じる
+			// 前回が子だった場合リストを閉じる
 			if( $depth < $this->prev_depth ) {
 				$this->end_lvl($this->output, $item, ($this->prev_depth-1)*2);
 			}
-
+			// 一番上の親だった場合
 			if( !$depth ) {
-				//一番上の親だった場合
 				$this->start_el($this->output, $item, $depth);
 			}
+			// 子の場合
 			else {
-				//子の場合
-
-				//子のさらに子だった場合
+				// 子のさらに子だった場合
 				if( $depth > $this->prev_depth ) {
 					$this->start_lvl($this->output, $item, ($depth-1)*2);
 				}
-
 				$this->start_el($this->output, $item, $depth*2);
 			}
-
-			//リストを閉じる
+			// リストを閉じる
 			$this->end_el($this->output, $item, $depth);
-
-			//前回の深度を更新
+			// 前回の深度を更新
 			$this->prev_depth = $depth;
-			//親リストの登録
+			// 親リストの登録
 			array_unshift($this->history, $item['ID']);
 		}
 

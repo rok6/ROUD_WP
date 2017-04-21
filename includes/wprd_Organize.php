@@ -22,7 +22,6 @@ class WPRD_Organize
 			$this->auto_post_slug();
 		}
 		else {
-			//$this->deregister_jquery();
 			$this->clean_wp_head([
 				'wp_generator',
 				'wp_shortlink_wp_head',
@@ -114,14 +113,6 @@ class WPRD_Organize
 		add_action('wp_before_admin_bar_render', function() {
 			global $wp_admin_bar;
 			$wp_admin_bar->remove_menu( 'wp-logo' );
-		});
-	}
-
-
-	private function deregister_jquery()
-	{
-		add_action('wp_enqueue_scripts', function() {
-			wp_deregister_script('jquery');
 		});
 	}
 

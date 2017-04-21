@@ -2,16 +2,48 @@
 
 	'use strict';
 
-	tinymce.create('tinymce.plugins.MyButtons',
+	tinymce.create('tinymce.plugins.wprdCustomEdit',
 	{
 		init : function(ed, url) {
+
+			ed.addButton('dlist-dl', {
+				text	: 'dl',
+				title	: '定義リスト <dl>',
+				cmd		: 'dlist-dl' + '_cmd'
+			});
+			ed.addCommand('dlist-dl' + '_cmd', function() {
+				var selected_text = ed.selection.getContent();
+				var return_text = '<dl>' + selected_text + '</dl>';
+				ed.execCommand('mceInsertContent', 0, return_text);
+			});
+			ed.addButton('dlist-dt', {
+				text	: 'dt',
+				title	: '定義リスト <dt>',
+				cmd		: 'dlist-dt' + '_cmd'
+			});
+			ed.addCommand('dlist-dt' + '_cmd', function() {
+				var selected_text = ed.selection.getContent();
+				var return_text = '<dt>' + selected_text + '</dt>';
+				ed.execCommand('mceInsertContent', 0, return_text);
+			});
+			ed.addButton('dlist-dd', {
+				text	: 'dd',
+				title	: '定義リスト <dd>',
+				cmd		: 'dlist-dd' + '_cmd'
+			});
+			ed.addCommand('dlist-dd' + '_cmd', function() {
+				var selected_text = ed.selection.getContent();
+				var return_text = '<dd>' + selected_text + '</dd>';
+				ed.execCommand('mceInsertContent', 0, return_text);
+			});
+
 
 			ed.addButton('serif', {
 				text	: 'serif',
 				title	: 'セリフ体 <span class="serif">',
 				cmd		: 'serif' + '_cmd'
 			});
-			ed.addCommand('serif_cmd', function() {
+			ed.addCommand('serif' + '_cmd', function() {
 				var selected_text = ed.selection.getContent();
 				var return_text = '<span class="serif">' + selected_text + '</span>';
 				ed.execCommand('mceInsertContent', 0, return_text);
@@ -73,13 +105,35 @@
 				ed.execCommand('mceInsertContent', 0, return_text);
 			});
 
-		}
+			/**
+			 * TAB indent
+			 *----------------------------------------------------------*/
+			//
+			// ed.on('keyDown', function(e) {
+			// 	if( e.keyCode == 9 && !e.altKey && !e.ctrlKey ) {
+			// 		// Indent (Tab) or Outdent (Shift+Tab)
+			// 		if( e.shiftKey ) {
+			// 			ed.execCommand('Outdent');
+			// 		}
+			// 		else {
+			// 			var sel = ed.selection.getSel();
+			// 			if( sel ) {
+			// 				var $tab = "<span class=\"tab-indent\">\t</span>";
+			// 				ed.execCommand('mceInsertContent', 0, $tab);
+			// 			}
+			// 			//ed.execCommand('Indent');
+			// 		}
+			// 		// And prevent the default event handler running
+			// 		e.preventDefault();
+			// 		return false;
+			// 	}
+			// });
+
+		}// if
 
 	});
 
-	tinymce.PluginManager.add(
-		'custom_button_script',
-		tinymce.plugins.MyButtons
-	);
+
+	tinymce.PluginManager.add('custom_my_mce', tinymce.plugins.wprdCustomEdit);
 
 })(this, this.jQuery);

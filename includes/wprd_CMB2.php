@@ -132,7 +132,7 @@ class WPRD_CMB2
 				}
 
 				$meta = get_post_custom($post_id);
-				$field_args = $this->get_column_field($column_name, $meta);
+				$field_args = $this->get_custom_field_value($column_name, $meta);
 
 				echo esc_html($field_args['value']);
 			}, 10, 2);
@@ -141,7 +141,7 @@ class WPRD_CMB2
 	}
 
 
-	private function get_column_field($column_name, $meta)
+	private function get_custom_field_value($column_name, $meta)
 	{
 		$field = $this->custom_fields->get_field($column_name);
 		$field_args = [];
@@ -167,7 +167,7 @@ class WPRD_CMB2
 			if( !(isset($post_type) && in_array($post_type, self::$allow_posts, true)) ) {
 				return;
 			}
-			wp_enqueue_script( 'my_custom_script', get_template_directory_uri().'/assets/js/admin_custom_fields.js', false, null, true );
+			wp_enqueue_script( 'my_custom_script', get_template_directory_uri().'/assets/js/admin_edit.js', false, null, true );
 		});
 	}
 

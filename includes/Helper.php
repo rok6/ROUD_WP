@@ -9,12 +9,17 @@ class Helper
 			logo
 			robots
 			description
+			headline
+			breadcrumb
+			navigation_menu
 			title
 			thumbnail
 			author
 			datetime
 			content
-			tags
+			taxonomies
+			post-paginations
+			page_links
 
 	*=====================================================*/
 
@@ -318,7 +323,7 @@ class Helper
 				esc_html($updated)
 			);
 		}
-		
+
 		$entry_date .= sprintf(
 			'<time datetime="%1$s" class="published">%2$s</time>',
 			esc_attr($published_datetime),
@@ -344,7 +349,7 @@ class Helper
 	 *=====================================================*/
 	static public function taxonomies( $id )
 	{
-		$taxonomy		= get_object_taxonomies(get_post_type());
+		$taxonomy		= get_object_taxonomies(get_post_type($id));
 		$taxonomies	= wp_get_object_terms($id, $taxonomy);
 
 		$terms = [];
@@ -378,7 +383,7 @@ class Helper
 
 		}
 		else {
-			$terms[] = '<span class="no-taxonomy">-</span>';
+			$terms[] = '<span class="no-taxonomy"></span>';
 		}
 
 		return self::_render($terms, 6);
@@ -426,27 +431,27 @@ class Helper
 
 		/* 一番最初のページへのリンク */
 		if( $current > $range + 1 ) {
-			$page_list[] = '<li><a href="' . self::_page_link(1) . '">&laquo;</a></li>' . PHP_EOL;
+			$page_list[] = '<li><a href="' . esc_url(self::get_page_link(1)) . '">&laquo;</a></li>' . PHP_EOL;
 		}
 		/* 一つ前のページへのリンク */
 		if( $current > 1 ) {
-			$page_list[] = '<li><a href="' . self::_page_link($current - 1) . '">&lsaquo;</a></li>';
+			$page_list[] = '<li><a href="' . esc_url(self::get_page_link($current - 1)) . '">&lsaquo;</a></li>';
 		}
 
 		for( $i = 1; $i <= $max; $i++ ) {
 			if( !($i < $current - $range || $i > $current + $range) ) {
 				$page_list[] = ( $current === $i ) ? '<li><span class="current">' . $i . '</span></li>'
-																				 	 : '<li><a href="' . self::_page_link($i) . '">' . $i . '</a></li>';
+																				 	 : '<li><a href="' . esc_url(self::get_page_link($i)) . '">' . $i . '</a></li>';
  			}
 		}
 
 		/* 一つ後のページへのリンク */
 		if( $current < $max ) {
-			$page_list[] = '<li><a href="' . self::_page_link($current + 1) . '">&rsaquo;</a></li>';
+			$page_list[] = '<li><a href="' . esc_url(self::get_page_link($current + 1)) . '">&rsaquo;</a></li>';
 		}
 		/* 一番最後のページへのリンク */
 		if( $current < $max - $range ) {
-			$page_list[] = '<li><a href="' . self::_page_link($max) . '">&raquo;</a></li>' . PHP_EOL;
+			$page_list[] = '<li><a href="' . esc_url(self::get_page_link($max)) . '">&raquo;</a></li>' . PHP_EOL;
 		}
 
 
@@ -473,7 +478,7 @@ class Helper
 		], 1);
 	}
 
-	private static function _page_link( $page = 1 )
+	private static function get_page_link( $page = 1 )
 	{
 		$page = (int)$page;
 
@@ -487,7 +492,7 @@ class Helper
 			}
 		}
 
-		return esc_url($page_link);
+		return $page_link;
 	}
 
 	/**
